@@ -13,9 +13,21 @@ import java.io.Serializable;
 @Data
 public class FilmInfo implements Serializable {
 
-//    private String filmId;
-//
-//    private Integer filmType;
-//
-//    private String imgAddress;
+    private String filmId;
+
+    private Integer filmType;
+
+    private String imgAddress;
+
+    private String filmName;
+
+    private String filmScore;
+
+    private Integer expectNum;
+
+    private String showTime;
+
+    private Integer boxNum;
+
+    private String score;
 }
