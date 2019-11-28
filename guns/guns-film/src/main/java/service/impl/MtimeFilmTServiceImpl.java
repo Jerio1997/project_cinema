@@ -1,8 +1,8 @@
-package com.stylefeng.guns.rest.service.impl;
+package service.impl;
 
 import com.stylefeng.guns.rest.common.persistence.model.MtimeFilmT;
 import com.stylefeng.guns.rest.common.persistence.dao.MtimeFilmTMapper;
-import com.stylefeng.guns.rest.service.IMtimeFilmTService;
+import service.IMtimeFilmTService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * </p>
  *
  * @author Jerio
- * @since 2019-11-27
+ * @since 2019-11-28
  */
 @Service
 public class MtimeFilmTServiceImpl extends ServiceImpl<MtimeFilmTMapper, MtimeFilmT> implements IMtimeFilmTService {

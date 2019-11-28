@@ -1,4 +1,4 @@
-package com.stylefeng.guns.rest.service;
+package service;
 
 import com.stylefeng.guns.rest.common.persistence.model.MtimeFilmT;
 import com.baomidou.mybatisplus.service.IService;
@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.service.IService;
  * </p>
  *
  * @author Jerio
- * @since 2019-11-27
+ * @since 2019-11-28
  */
 public interface IMtimeFilmTService extends IService<MtimeFilmT> {
 
