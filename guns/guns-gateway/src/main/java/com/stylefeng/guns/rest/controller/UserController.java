@@ -1,7 +1,8 @@
 package com.stylefeng.guns.rest.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+
+import com.alibaba.dubbo.config.annotation.Reference;
+import com.stylefeng.guns.api.user.UserService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,9 +12,16 @@ public class UserController {
 
 
 
-    @GetMapping("logout")
+
+    @Reference
+    private UserService userService;
+
+//    @RequestMapping("register")
+
+    /*@GetMapping("logout")
     public String logout(){
 
-    }
+    }*/
+
 
 }
