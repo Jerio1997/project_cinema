@@ -19,11 +19,14 @@ public class UserController {
     /*@RequestMapping("register")
     public ResponseVO*/
 
-    @GetMapping("logout")
+    /*@GetMapping("logout")
     public ResponseVO logout(){
-//        ResponseVO responseVO = new ResponseVO();
-        return null;
-    }
+
+    }*/
+
+
+    /*@GetMapping("getUserInfo")
+    public*/
 
 
 }
