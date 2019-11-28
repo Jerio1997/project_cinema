@@ -162,11 +162,52 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public List<FilmInfo> getExpectRanking(Integer count) {
-        return null;
+
+        Page<MtimeFilmT> page = new Page<>(1,count,"film_preSaleNum",false);
+        EntityWrapper<MtimeFilmT> wrapper = new EntityWrapper<>();
+        List<MtimeFilmT> mtimeFilmTS = mtimeFilmTMapper.selectPage(page, wrapper);
+        List<FilmInfo> filmInfos = convert2ExpectRanking(mtimeFilmTS);
+        return filmInfos;
+    }
+
+    private List<FilmInfo> convert2ExpectRanking(List<MtimeFilmT> mtimeFilmTS) {
+        List<FilmInfo> filmInfos = new ArrayList<FilmInfo>();
+        if(CollectionUtils.isEmpty(mtimeFilmTS)){
+            return filmInfos;
+        }
+        FilmInfo filmInfo = new FilmInfo();
+        for (MtimeFilmT mtimeFilmT : mtimeFilmTS) {
+            filmInfo.setFilmId(mtimeFilmT.getUuid().toString());
+            filmInfo.setFilmName(mtimeFilmT.getFilmName());
+            filmInfo.setImgAddress(mtimeFilmT.getImgAddress());
+            filmInfo.setExpectNum(mtimeFilmT.getFilmPresalenum());
+            filmInfos.add(filmInfo);
+        }
+        return filmInfos;
     }
 
     @Override
     public List<FilmInfo> getTop(Integer count) {
-        return null;
+        Page<MtimeFilmT> page = new Page<>(1,count,"film_score",false);
+        EntityWrapper<MtimeFilmT> wrapper = new EntityWrapper<>();
+        List<MtimeFilmT> mtimeFilmTS = mtimeFilmTMapper.selectPage(page, wrapper);
+        List<FilmInfo> filmInfos = convert2Top(mtimeFilmTS);
+        return filmInfos;
+    }
+
+    private List<FilmInfo> convert2Top(List<MtimeFilmT> mtimeFilmTS) {
+        List<FilmInfo> filmInfos = new ArrayList<FilmInfo>();
+        if(CollectionUtils.isEmpty(mtimeFilmTS)){
+            return filmInfos;
+        }
+        FilmInfo filmInfo = new FilmInfo();
+        for (MtimeFilmT mtimeFilmT : mtimeFilmTS) {
+            filmInfo.setFilmId(mtimeFilmT.getUuid().toString());
+            filmInfo.setFilmName(mtimeFilmT.getFilmName());
+            filmInfo.setImgAddress(mtimeFilmT.getImgAddress());
+            filmInfo.setScore(mtimeFilmT.getFilmScore());
+            filmInfos.add(filmInfo);
+        }
+        return filmInfos;
     }
 }

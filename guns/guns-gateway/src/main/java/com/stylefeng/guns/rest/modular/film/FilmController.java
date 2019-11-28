@@ -23,16 +23,19 @@ public class FilmController {
     public FilmRespVO getIndex(){
 
         List<BannerVO> banners = filmService.getBanners();
-
         FilmVO hotFilms = filmService.getHotFilms(true, 8);
-
         FilmVO soonFilms = filmService.getSoonFilms(true, 8);
-
         List<FilmInfo> boxRanking = filmService.getBoxRanking(10);
+        List<FilmInfo> expectRanking = filmService.getExpectRanking(10);
+        List<FilmInfo> top = filmService.getTop(10);
 
         FilmIndexVO filmIndexVO = new FilmIndexVO();
-
         filmIndexVO.setBanners(banners);
+        filmIndexVO.setHotFilms(hotFilms);
+        filmIndexVO.setSoonFilms(soonFilms);
+        filmIndexVO.setBoxRanking(boxRanking);
+        filmIndexVO.setExceptRanking(expectRanking);
+        filmIndexVO.setTop100(top);
 
         FilmRespVO filmRespVO = new FilmRespVO();
         filmRespVO.setData(filmIndexVO);
