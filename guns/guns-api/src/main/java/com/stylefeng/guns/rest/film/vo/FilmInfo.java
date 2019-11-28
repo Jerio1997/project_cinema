@@ -1,10 +1,21 @@
 package com.stylefeng.guns.rest.film.vo;
 
+import lombok.Data;
+
+import java.io.Serializable;
+
 /**
  * @program: guns-parent
  * @description:
- * @author: Mr.Wang
+ * @author: Helios1102
  * @create: 2019-11-28 20:18
  */
-public class FilmInfo {
+@Data
+public class FilmInfo implements Serializable {
+
+//    private String filmId;
+//
+//    private Integer filmType;
+//
+//    private String imgAddress;
 }
