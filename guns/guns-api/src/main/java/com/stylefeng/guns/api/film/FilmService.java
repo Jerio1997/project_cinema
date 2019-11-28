@@ -1,4 +1,4 @@
-package com.stylefeng.guns.rest.film;
+package com.stylefeng.guns.api.film;
 
 
 /**
