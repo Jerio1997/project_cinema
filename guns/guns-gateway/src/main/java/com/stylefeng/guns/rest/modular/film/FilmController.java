@@ -2,10 +2,7 @@ package com.stylefeng.guns.rest.modular.film;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.api.film.FilmService;
-import com.stylefeng.guns.api.film.vo.BannerVO;
-import com.stylefeng.guns.api.film.vo.FilmIndexVO;
-import com.stylefeng.guns.api.film.vo.FilmRespVO;
-import com.stylefeng.guns.api.film.vo.FilmVO;
+import com.stylefeng.guns.api.film.vo.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,6 +25,10 @@ public class FilmController {
         List<BannerVO> banners = filmService.getBanners();
 
         FilmVO hotFilms = filmService.getHotFilms(true, 8);
+
+        FilmVO soonFilms = filmService.getSoonFilms(true, 8);
+
+        List<FilmInfo> boxRanking = filmService.getBoxRanking(10);
 
         FilmIndexVO filmIndexVO = new FilmIndexVO();
 
