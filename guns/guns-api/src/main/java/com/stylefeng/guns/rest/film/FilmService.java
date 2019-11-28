@@ -1,6 +1,5 @@
 package com.stylefeng.guns.rest.film;
 
-import com.stylefeng.guns.rest.film.vo.FilmVo;
 
 /**
  * Author Jerio
@@ -8,5 +7,4 @@ import com.stylefeng.guns.rest.film.vo.FilmVo;
  **/
 public interface FilmService {
 
-    FilmVo getById(Integer id);
 }
