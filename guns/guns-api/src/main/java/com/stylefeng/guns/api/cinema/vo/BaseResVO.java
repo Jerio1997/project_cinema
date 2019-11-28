@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class BaseResVO<T> {
-    
+
     private String imgPre;
     private String msg;
     private Integer nowPage;
