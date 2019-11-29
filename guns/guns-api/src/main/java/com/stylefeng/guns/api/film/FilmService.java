@@ -19,9 +19,9 @@ public interface FilmService {
 
     FilmVO getSoonFilms(boolean isLimit, int nums);
 
-    List<FilmInfo> getBoxRanking();
+    List<FilmInfo> getBoxRanking(Integer count);
 
-    List<FilmInfo> getExpectRanking();
+    List<FilmInfo> getExpectRanking(Integer count);
 
-    List<FilmInfo> getTop();
+    List<FilmInfo> getTop(Integer count);
 }
