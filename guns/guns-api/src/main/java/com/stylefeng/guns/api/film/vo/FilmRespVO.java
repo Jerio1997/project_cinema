@@ -16,4 +16,6 @@ public class FilmRespVO implements Serializable {
     private String imgPre;
 
     private Object data;
+
+    private String msg;
 }

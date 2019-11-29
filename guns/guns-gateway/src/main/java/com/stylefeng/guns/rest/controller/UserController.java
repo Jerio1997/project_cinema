@@ -32,11 +32,14 @@ public class UserController {
 
     }
 
-    @GetMapping("logout")
+    /*@GetMapping("logout")
     public ResponseVO logout(){
-//        ResponseVO responseVO = new ResponseVO();
-        return null;
-    }
+
+    }*/
+
+
+    /*@GetMapping("getUserInfo")
+    public*/
 
 
 }
