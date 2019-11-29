@@ -1,4 +1,4 @@
-package com.stylefeng.guns;
+package com.stylefeng;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
