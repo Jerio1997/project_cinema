@@ -32,6 +32,8 @@ public class FilmController {
                 filmRespVO.setMsg("查询失败，无banner可加载");
                 return filmRespVO;
             }
+            //查询数据库
+            //参数是每页显示最大条目数，在service层使用
             FilmVO hotFilms = filmService.getHotFilms(true, 8);
             FilmVO soonFilms = filmService.getSoonFilms(true, 8);
             List<FilmInfo> boxRanking = filmService.getBoxRanking(10);
@@ -60,6 +62,7 @@ public class FilmController {
     @RequestMapping("getConditionList")
     public FilmRespVO getConditionList(String catId, String sourceId, String yearId) {
 
+        //默认值是99
         if (catId == null) catId = "99";
         if (sourceId == null) sourceId = "99";
         if (yearId == null) yearId = "99";
@@ -68,6 +71,7 @@ public class FilmController {
         FilmConditionVO filmConditionVO = new FilmConditionVO();
 
         try {
+            //数据库中查得
             List<CatVO> catInfo = filmService.getCats(catId);
             List<SourceVO> sourceInfo = filmService.getSource(sourceId);
             List<YearVO> yearInfo = filmService.getYears(yearId);
