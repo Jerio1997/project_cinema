@@ -27,14 +27,6 @@ mybatis-plus:
 #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #打印sql语句,调试用
 
 spring:
-  application:
-    name: guns-user
-  dubbo:
-    registry: zookeeper://localhost:2181
-    server: true
-    protocol:
-      name: dubbo
-      port: 20880
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/guns_rest?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
     username: root
@@ -46,3 +38,13 @@ logging:
   level.com.stylefeng: debug
   path: logs/
   file: guns-user.log
+dubbo:
+  application:
+    name: user-service
+  registry:
+    protocol: zookeeper
+    address: localhost:2181
+  protocol:
+    name: dubbo
+    port: 20880
+
