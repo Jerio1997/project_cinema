@@ -1,12 +1,16 @@
 package com.stylefeng.guns.rest.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.dubbo.rpc.RpcContext;
 import com.stylefeng.guns.api.film.FilmService;
 import com.stylefeng.guns.api.film.vo.*;
+import com.stylefeng.guns.rest.modular.vo.ResponseVO;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * Author Jerio
@@ -96,7 +100,7 @@ public class FilmController {
 
     @RequestMapping(value = "films{searchFilm}",method = RequestMethod.GET)
     public ResponseVo films(@PathVariable("searchFilm")String searchFilm,
-                            int searchType){
+                            int searchType) throws ExecutionException, InterruptedException {
         //searchType : ‘0表示按照编号查找，1表示按照名称查找'
 
         FilmDetailVo filmDetailVo = filmService.getFilmDetail(searchType,searchFilm);
@@ -107,6 +111,30 @@ public class FilmController {
             return ResponseVo.serviceException("查询失败，无影片可加载");
         }
        String filmId = filmDetailVo.getFilmId();
-        return null;
+        filmService.getFilmDesc(filmId);
+        Future<FilmDescVO> filmDescVOFuture = RpcContext.getContext().getFuture();
+        //图片信息
+        filmService.getImgs(filmId);
+        Future<ImgVO> imgVOFuture = RpcContext.getContext().getFuture();
+        //导演信息
+        filmService.getDectInfo(filmId);
+        Future<ActorVO> actorVOFuture = RpcContext.getContext().getFuture();
+        //演员信息
+        filmService.getActors(filmId);
+        Future<List<ActorVO>> actors = RpcContext.getContext().getFuture();
+
+        InfoRequstVO infoRequstVO = new InfoRequstVO();
+
+        ActorRequestVO actorRequestVO = new ActorRequestVO();
+        actorRequestVO.setActors(actors.get());
+        actorRequestVO.setDirector(actorVOFuture.get());
+
+        infoRequstVO.setActors(actorRequestVO);
+        infoRequstVO.setBiography(filmDescVOFuture.get().getBiography());
+        infoRequstVO.setFilmId(filmId);
+        infoRequstVO.setImgVO(imgVOFuture.get());
+
+        filmDetailVo.setInfo04(infoRequstVO);
+        return ResponseVo.success("http://img.meetingshop.cn/",filmDetailVo);
     }
 }

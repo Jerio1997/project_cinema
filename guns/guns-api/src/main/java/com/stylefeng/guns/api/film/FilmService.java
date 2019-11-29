@@ -30,4 +30,12 @@ public interface FilmService {
     GetFilmVo getClassicFilm(boolean b, Integer pageSize, Integer nowPage, Integer sortId, Integer sourceId, Integer yearId, Integer catId);
 
     FilmDetailVo getFilmDetail(int searchType, String searchFilm);
+
+    FilmDescVO getFilmDesc(String filmId);
+
+    ImgVO getImgs(String filmId);
+
+    ActorVO getDectInfo(String filmId);
+
+    List<ActorVO> getActors(String filmId);
 }

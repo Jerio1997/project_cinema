@@ -3,13 +3,12 @@ package com.stylefeng.guns.rest.service.impl;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
-import com.stylefeng.guns.api.film.vo.BannerVO;
-import com.stylefeng.guns.api.film.vo.FilmInfo;
-import com.stylefeng.guns.api.film.vo.FilmVO;
-import com.stylefeng.guns.rest.common.persistence.dao.MtimeBannerTMapper;
-import com.stylefeng.guns.rest.common.persistence.dao.MtimeFilmTMapper;
+import com.stylefeng.guns.api.film.vo.*;
+import com.stylefeng.guns.rest.common.persistence.dao.*;
 import com.stylefeng.guns.api.film.FilmService;
+import com.stylefeng.guns.rest.common.persistence.model.MtimeActorT;
 import com.stylefeng.guns.rest.common.persistence.model.MtimeBannerT;
+import com.stylefeng.guns.rest.common.persistence.model.MtimeFilmInfoT;
 import com.stylefeng.guns.rest.common.persistence.model.MtimeFilmT;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +32,10 @@ public class FilmServiceImpl implements FilmService {
     private MtimeFilmTMapper mtimeFilmTMapper;
     @Autowired
     private MtimeBannerTMapper mtimeBannerTMapper;
-
+    @Autowired
+    private MtimeFilmInfoTMapper mtimeFilmInfoTMapper;
+    @Autowired
+    private MtimeActorTMapper mtimeActorTMapper;
 
     @Override
     public List<BannerVO> getBanners() {
@@ -209,5 +211,263 @@ public class FilmServiceImpl implements FilmService {
             filmInfos.add(filmInfo);
         }
         return filmInfos;
+    }
+
+    //获取影片信息
+    private List<GetFilmInfo> getFilmInfos(List<MtimeFilmT> mtimeFilmTS){
+        List<GetFilmInfo> filmInfos = new ArrayList<>();
+        for (MtimeFilmT mtimeFilmT : mtimeFilmTS) {
+            GetFilmInfo getFilmInfo = new GetFilmInfo();
+            getFilmInfo.setFilmId(mtimeFilmT.getUuid()+"");
+            getFilmInfo.setFilmName(mtimeFilmT.getFilmName());
+            getFilmInfo.setFilmScore(mtimeFilmT.getFilmScore());
+            getFilmInfo.setFilmType(mtimeFilmT.getFilmType());
+            getFilmInfo.setImgAddress(mtimeFilmT.getImgAddress());
+
+            filmInfos.add(getFilmInfo);
+        }
+        return filmInfos;
+    }
+    //热映
+    @Override
+    public GetFilmVo getHotFilm(boolean b, Integer pageSize, Integer nowPage, Integer sortId, Integer sourceId, Integer yearId, Integer catId) {
+        GetFilmVo getFilmVo = new GetFilmVo();
+        List<GetFilmInfo> filmInfos = new ArrayList<>();
+
+        EntityWrapper<MtimeFilmT> entityWrapper = new EntityWrapper<>();
+        entityWrapper.eq("film_status","1");
+        //判断是否是首页需要的内容
+        if (b){
+
+            Page<MtimeFilmT> page = new Page<>(1,pageSize);
+            List<MtimeFilmT> mtimeFilmTS = mtimeFilmTMapper.selectPage(page,entityWrapper);
+
+            filmInfos = getFilmInfos(mtimeFilmTS);
+            getFilmVo.setFilmNum(mtimeFilmTS.size());
+            getFilmVo.setGetFilmInfoList(filmInfos);
+        }else {
+            Page<MtimeFilmT> page = null;
+            //根据sortId的不同来搜索影片,排序方式，1-按热门搜索，2-按时间搜索，3-按评价搜索
+            if (sortId == 1){
+                page = new Page<>(nowPage,pageSize,"film_box_office");
+            }
+            if (sortId == 2){
+                page = new Page<>(nowPage,pageSize,"film_time");
+            }
+            if (sortId == 3){
+                page = new Page<>(nowPage,pageSize,"film_score");
+            }
+            else {
+                page = new Page<>(nowPage,pageSize,"film_box_office");
+            }
+
+            //catId,sourceId,yearId不为默认(99),则根据对应的编号进行查询
+            if (sortId != 99){
+                entityWrapper.eq("film_source",sourceId);
+            }
+            if (catId != 99){
+                //影片分类，参照分类表,多个分类以#分割
+                String cat = "%#" + catId + "#%";
+                entityWrapper.eq("film_cats",cat);
+            }
+            if (yearId != 99){
+                entityWrapper.eq("film_date",yearId);
+            }
+            List<MtimeFilmT> mtimeFilmTS = mtimeFilmTMapper.selectPage(page,entityWrapper);
+
+            filmInfos = getFilmInfos(mtimeFilmTS);
+            getFilmVo.setFilmNum(mtimeFilmTS.size());
+            //totalCounts/pageSize
+            int totalCounts = mtimeFilmTMapper.selectCount(entityWrapper);
+            int totalPages = (totalCounts/pageSize) + 1;
+
+            getFilmVo.setGetFilmInfoList(filmInfos);
+            getFilmVo.setTotalPage(totalPages);
+            getFilmVo.setNowPage(nowPage);
+        }
+        return getFilmVo;
+    }
+
+    //即将上映
+    @Override
+    public GetFilmVo getSoonFilm(boolean b, Integer pageSize, Integer nowPage, Integer sortId, Integer sourceId, Integer yearId, Integer catId) {
+        GetFilmVo getFilmVo = new GetFilmVo();
+        List<GetFilmInfo> filmInfos = new ArrayList<>();
+
+        EntityWrapper<MtimeFilmT> entityWrapper = new EntityWrapper<>();
+        entityWrapper.eq("film_status","2");
+        //判断是否是首页需要的内容
+        if (b){
+
+            Page<MtimeFilmT> page = new Page<>(1,pageSize);
+            List<MtimeFilmT> mtimeFilmTS = mtimeFilmTMapper.selectPage(page,entityWrapper);
+
+            filmInfos = getFilmInfos(mtimeFilmTS);
+            getFilmVo.setFilmNum(mtimeFilmTS.size());
+            getFilmVo.setGetFilmInfoList(filmInfos);
+        }else {
+            Page<MtimeFilmT> page = null;
+            //根据sortId的不同来搜索影片,排序方式，1-按热门搜索，2-按时间搜索，3-按评价搜索
+            if (sortId == 1){
+                page = new Page<>(nowPage,pageSize,"film_preSaleNum");
+            }
+            if (sortId == 2){
+                page = new Page<>(nowPage,pageSize,"film_time");
+            }
+            if (sortId == 3){
+                page = new Page<>(nowPage,pageSize,"film_preSaleNum");
+            }
+            else {
+                page = new Page<>(nowPage,pageSize,"film_preSaleNum");
+            }
+
+            //catId,sourceId,yearId不为默认(99),则根据对应的编号进行查询
+            if (sortId != 99){
+                entityWrapper.eq("film_source",sourceId);
+            }
+            if (catId != 99){
+                //影片分类，参照分类表,多个分类以#分割
+                String cat = "%#" + catId + "#%";
+                entityWrapper.eq("film_cats",cat);
+            }
+            if (yearId != 99){
+                entityWrapper.eq("film_date",yearId);
+            }
+            List<MtimeFilmT> mtimeFilmTS = mtimeFilmTMapper.selectPage(page,entityWrapper);
+
+            filmInfos = getFilmInfos(mtimeFilmTS);
+            getFilmVo.setFilmNum(mtimeFilmTS.size());
+            //totalCounts/pageSize
+            int totalCounts = mtimeFilmTMapper.selectCount(entityWrapper);
+            int totalPages = (totalCounts/pageSize) + 1;
+
+            getFilmVo.setGetFilmInfoList(filmInfos);
+            getFilmVo.setTotalPage(totalPages);
+            getFilmVo.setNowPage(nowPage);
+        }
+        return getFilmVo;
+    }
+
+    //经典影片
+    @Override
+    public GetFilmVo getClassicFilm(boolean b, Integer pageSize, Integer nowPage, Integer sortId, Integer sourceId, Integer yearId, Integer catId) {
+        GetFilmVo getFilmVo = new GetFilmVo();
+        List<GetFilmInfo> filmInfos = new ArrayList<>();
+
+        EntityWrapper<MtimeFilmT> entityWrapper = new EntityWrapper<>();
+        entityWrapper.eq("film_status","3");
+
+        Page<MtimeFilmT> page = null;
+        //根据sortId的不同来搜索影片,排序方式，1-按热门搜索，2-按时间搜索，3-按评价搜索
+        if (sortId == 1){
+            page = new Page<>(nowPage,pageSize,"film_box_office");
+        }
+        if (sortId == 2){
+            page = new Page<>(nowPage,pageSize,"film_time");
+        }
+        if (sortId == 3){
+            page = new Page<>(nowPage,pageSize,"film_score");
+        }
+        else {
+            page = new Page<>(nowPage,pageSize,"film_box_office");
+        }
+
+        //catId,sourceId,yearId不为默认(99),则根据对应的编号进行查询
+        if (sortId != 99){
+            entityWrapper.eq("film_source",sourceId);
+        }
+        if (catId != 99){
+            //影片分类，参照分类表,多个分类以#分割
+            String cat = "%#" + catId + "#%";
+            entityWrapper.eq("film_cats",cat);
+        }
+        if (yearId != 99){
+            entityWrapper.eq("film_date",yearId);
+        }
+        List<MtimeFilmT> mtimeFilmTS = mtimeFilmTMapper.selectPage(page,entityWrapper);
+
+        filmInfos = getFilmInfos(mtimeFilmTS);
+        getFilmVo.setFilmNum(mtimeFilmTS.size());
+        //totalCounts/pageSize
+        int totalCounts = mtimeFilmTMapper.selectCount(entityWrapper);
+        int totalPages = (totalCounts/pageSize) + 1;
+
+        getFilmVo.setGetFilmInfoList(filmInfos);
+        getFilmVo.setTotalPage(totalPages);
+        getFilmVo.setNowPage(nowPage);
+
+        return getFilmVo;
+    }
+
+    @Override
+    public FilmDetailVo getFilmDetail(int searchType, String searchFilm) {
+        FilmDetailVo filmDetailVo = null;
+        //searchType : ‘0表示按照编号查找，1表示按照名称查找’
+        if (searchType ==1){
+            filmDetailVo = mtimeFilmTMapper.getFilmDetailByName("%"+searchFilm+"%");
+        }else {
+            filmDetailVo = mtimeFilmTMapper.getFilmDetailById(searchFilm);
+        }
+        return filmDetailVo;
+    }
+
+    private MtimeFilmInfoT getFilmInfo(String filmId){
+
+        MtimeFilmInfoT mtimeFilmInfoT = new MtimeFilmInfoT();
+        mtimeFilmInfoT.setFilmId(filmId);
+
+        mtimeFilmInfoT = mtimeFilmInfoTMapper.selectOne(mtimeFilmInfoT);
+
+        return mtimeFilmInfoT;
+    }
+
+    @Override
+    public FilmDescVO getFilmDesc(String filmId) {
+
+        MtimeFilmInfoT mtimeFilmInfoT = getFilmInfo(filmId);
+
+        FilmDescVO filmDescVO = new FilmDescVO();
+        filmDescVO.setBiography(mtimeFilmInfoT.getBiography());
+        filmDescVO.setFilmId(filmId);
+
+        return filmDescVO;
+    }
+
+    @Override
+    public ImgVO getImgs(String filmId) {
+
+        MtimeFilmInfoT mtimeFilmInfoT = getFilmInfo(filmId);
+        String filmImgs = mtimeFilmInfoT.getFilmImgs();
+        String[] filmImgs1 = filmImgs.split(",");
+
+        ImgVO imgVO = new ImgVO();
+        imgVO.setMainImg(filmImgs1[0]);
+        imgVO.setImg01(filmImgs1[1]);
+        imgVO.setImg02(filmImgs1[2]);
+        imgVO.setImg03(filmImgs1[3]);
+        imgVO.setImg04(filmImgs1[4]);
+        return imgVO;
+    }
+
+    @Override
+    public ActorVO getDectInfo(String filmId) {
+        MtimeFilmInfoT mtimeFilmInfoT = new MtimeFilmInfoT();
+
+        Integer directorId = mtimeFilmInfoT.getDirectorId();
+
+        MtimeActorT mtimeActorT = mtimeActorTMapper.selectById(filmId);
+
+        ActorVO actorVO = new ActorVO();
+        actorVO.setDirectorName(mtimeActorT.getActorName());
+        actorVO.setImgAddress(mtimeActorT.getActorImg());
+
+        return actorVO;
+    }
+
+    @Override
+    public List<ActorVO> getActors(String filmId) {
+
+        List<ActorVO> actorVOS = mtimeActorTMapper.getActors(filmId);
+        return actorVOS;
     }
 }
