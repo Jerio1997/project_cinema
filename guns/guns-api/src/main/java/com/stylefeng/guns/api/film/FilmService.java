@@ -1,9 +1,7 @@
 package com.stylefeng.guns.api.film;
 
 
-import com.stylefeng.guns.api.film.vo.BannerVO;
-import com.stylefeng.guns.api.film.vo.FilmInfo;
-import com.stylefeng.guns.api.film.vo.FilmVO;
+import com.stylefeng.guns.api.film.vo.*;
 
 import java.util.List;
 
@@ -24,4 +22,12 @@ public interface FilmService {
     List<FilmInfo> getExpectRanking(Integer count);
 
     List<FilmInfo> getTop(Integer count);
+
+    GetFilmVo getHotFilm(boolean b, Integer pageSize, Integer nowPage, Integer sortId, Integer sourceId, Integer yearId, Integer catId);
+
+    GetFilmVo getSoonFilm(boolean b, Integer pageSize, Integer nowPage, Integer sortId, Integer sourceId, Integer yearId, Integer catId);
+
+    GetFilmVo getClassicFilm(boolean b, Integer pageSize, Integer nowPage, Integer sortId, Integer sourceId, Integer yearId, Integer catId);
+
+    FilmDetailVo getFilmDetail(int searchType, String searchFilm);
 }
