@@ -4,6 +4,9 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.api.cinema.CinemaService;
 import com.stylefeng.guns.api.cinema.vo.BaseResVO;
 import com.stylefeng.guns.api.cinema.vo.ConditionResVO;
+import com.stylefeng.guns.api.cinema.vo.GetFieldInfoDataResVO;
+import com.stylefeng.guns.api.cinema.vo.GetFieldsDataResVO;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,5 +30,14 @@ public class CinemaController {
         BaseResVO cinemas = cinemaService.getCinemas(brandId, hallType, areaId, pageSize, nowPage);
         return cinemas;
     }
-
+    @RequestMapping("getFields")
+    public BaseResVO<GetFieldsDataResVO> getFields(Integer cinemaId){
+        BaseResVO<GetFieldsDataResVO> fields = cinemaService.getFields(cinemaId);
+        return fields;
+    }
+    @RequestMapping("getFieldInfo")
+    public BaseResVO<GetFieldInfoDataResVO> getFieldInfo(Integer cinemaId,Integer fieldId){
+        BaseResVO<GetFieldInfoDataResVO> fieldInfo = cinemaService.getFieldInfo(cinemaId, fieldId);
+        return fieldInfo;
+    }
 }
