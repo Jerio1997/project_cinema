@@ -16,16 +16,20 @@ public class UserController {
 
     @PostMapping("register")
     public ResponseVO register(@RequestBody User user) {
-
-        User registerUser = userService.selectUserByUsernamePassword(user);
-        if (registerUser == null) {
-            boolean isRegister = userService.insertUserByUsernamePassword(user);
-            if (isRegister) {
-                return ResponseVO.success("注册成功");
-            }
-            return ResponseVO.appFail("系统出现异常，请联系管理员");
+        if (user.getUsername() == null || "".equals(user.getUsername().trim())) {
+            return ResponseVO.serviceFail("请输入用户名");
         }
-        return ResponseVO.serviceFail("用户已存在");
+        if (user.getPassword() == null || "".equals(user.getPassword().trim())) {
+            return ResponseVO.serviceFail("请输入密码");
+        }
+
+        boolean isRegister = userService.register(user);
+        if (isRegister) {
+            return ResponseVO.success("注册成功");
+        } else {
+            return ResponseVO.serviceFail("用户已存在");
+        }
+
     }
 
     /*@GetMapping("logout")
