@@ -25,11 +25,13 @@ public class JwtProperties {
 
     private String md5Key = "randomKey";
 
+    private String ignore;
+
     public static String getJwtPrefix() {
         return JWT_PREFIX;
     }
 
-    public String getHeader() {
+    public  String getHeader() {
         return header;
     }
 

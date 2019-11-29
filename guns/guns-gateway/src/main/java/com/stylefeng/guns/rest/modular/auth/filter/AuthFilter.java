@@ -17,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 对客户端请求的jwt token验证过滤器
@@ -51,12 +52,14 @@ public class AuthFilter extends OncePerRequestFilter {
             /*现在改成去redis里面验证*/
             Object o = redisTemplate.opsForValue().get(authToken);
             if(o == null){
-                //表示token不存在或者已经过期
-                //返回
+                //表示Redis中相应的uuid不存在或者已经过期
+                //重定向到登陆界面
+                response.sendRedirect("http://localhost/auth");
+                return;
+            } else {
+                //表示找到了Redis中相应的uuid
+                redisTemplate.expire(authToken,300, TimeUnit.SECONDS);
             }
-
-            //UserVo userVo = (UserVo)o;
-
 
             //验证token是否过期,包含了验证jwt是否正确
             try {

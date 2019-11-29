@@ -77,15 +77,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByUsername(String userName) {
-        User user = new User();
+    public UserInfo getUserByUsername(String userName) {
+        UserInfo user = new UserInfo();
         user.setUsername(userName);
         Map<String,Object> map = new HashMap<>();
         map.put("user_name",userName);
         List<MtimeUserT> mtimeUserTList = userTMapper.selectByMap(map);
         if (mtimeUserTList.size() == 1) {
-            String password = MD5Util.encrypt(mtimeUserTList.get(0).getUserPwd());
-            user.setPassword(password);
+//            String password = MD5Util.encrypt(mtimeUserTList.get(0).getUserPwd());//123456
+//            user.setPassword(password);
+            user.setUuid(mtimeUserTList.get(0).getUuid());
+            user.setPassword(mtimeUserTList.get(0).getUserPwd());
             return user;
         }
         return null;
