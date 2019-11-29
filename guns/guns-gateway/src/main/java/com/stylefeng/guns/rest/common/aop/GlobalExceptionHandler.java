@@ -32,4 +32,7 @@ public class GlobalExceptionHandler extends BaseControllerExceptionHandler {
     public ErrorTip jwtException(JwtException e) {
         return new ErrorTip(BizExceptionEnum.TOKEN_ERROR.getCode(), BizExceptionEnum.TOKEN_ERROR.getMessage());
     }
+
+
+
 }

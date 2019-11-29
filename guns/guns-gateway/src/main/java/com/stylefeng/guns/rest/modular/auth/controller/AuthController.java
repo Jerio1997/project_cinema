@@ -3,6 +3,7 @@ package com.stylefeng.guns.rest.modular.auth.controller;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.api.user.UserService;
 import com.stylefeng.guns.api.user.vo.User;
+import com.stylefeng.guns.api.user.vo.UserInfo;
 import com.stylefeng.guns.api.user.vo.UserLoginResVO;
 import com.stylefeng.guns.core.exception.GunsException;
 import com.stylefeng.guns.rest.common.exception.BizExceptionEnum;
@@ -46,27 +47,34 @@ public class AuthController {
     public ResponseVO createAuthenticationToken(AuthRequest authRequest) {
         UserLoginResVO userLoginResVO = new UserLoginResVO();
         //把用户信息返回过来
-//        User user = userService.getUserByUsername(authRequest.getUserName());
-
+        User user = userService.getUserByUsername(authRequest.getUserName());
+        if(user == null){
+            return ResponseVO.serviceFail("用户名或密码错误");
+        }
         //校验用户名和密码
-        boolean validate = reqValidator.validate(authRequest);
-
-
-
-
-
-       /* if (validate) {
+        boolean validate = judge(user,authRequest);
+        if (validate) {
             final String randomKey = jwtTokenUtil.getRandomKey();
             final String token = jwtTokenUtil.generateToken(authRequest.getUserName(), randomKey);
-
             redisTemplate.opsForValue().set(token,user);
             redisTemplate.expire(token,300, TimeUnit.SECONDS);
-
-
+            userLoginResVO.setRandomKey(randomKey);
+            userLoginResVO.setToken(token);
             return ResponseVO.success(userLoginResVO);
         } else {
-            return ResponseVO.
-        }*/
-       return ResponseVO.success(userLoginResVO);
+            return ResponseVO.serviceFail("用户名或密码错误");
+        }
+    }
+
+    private boolean judge(User user, AuthRequest authRequest) {
+        String USER_NAME = user.getUsername();
+        String PASSWORD = user.getPassword();
+        String userName = authRequest.getUserName();
+        String password = authRequest.getPassword();
+        if (USER_NAME.equals(userName) && PASSWORD.equals(password)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

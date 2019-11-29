@@ -12,4 +12,6 @@ public interface UserService {
     boolean updateUserInfo(UserInfo userInfo);
 
     UserInfo queryUserById(Integer uuid);
+
+    User getUserByUsername(String userName);
 }
