@@ -1,8 +1,8 @@
-package service.impl;
+package com.stylefeng.guns.rest.service.impl;
 
 import com.stylefeng.guns.rest.common.persistence.model.MtimeHallFilmInfoT;
 import com.stylefeng.guns.rest.common.persistence.dao.MtimeHallFilmInfoTMapper;
-import service.IMtimeHallFilmInfoTService;
+import com.stylefeng.guns.rest.service.IMtimeHallFilmInfoTService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
