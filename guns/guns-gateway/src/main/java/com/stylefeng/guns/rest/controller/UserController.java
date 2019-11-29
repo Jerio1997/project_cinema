@@ -4,6 +4,7 @@ package com.stylefeng.guns.rest.controller;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.api.user.UserService;
 import com.stylefeng.guns.api.user.vo.User;
+import com.stylefeng.guns.api.user.vo.UserInfo;
 import com.stylefeng.guns.rest.modular.vo.ResponseVO;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("user")
 public class UserController {
 
-    @Reference
+    @Reference(interfaceClass = UserService.class, check = false)
     private UserService userService;
 
     @PostMapping("register")
@@ -32,10 +33,34 @@ public class UserController {
 
     }
 
-    /*@GetMapping("logout")
-    public ResponseVO logout(){
+    @PostMapping("check")
+    public ResponseVO check(String username) {
+        if (username == null || "".equals(username.trim())) {
+            return ResponseVO.serviceFail("请输入用户名");
+        }
+        boolean isExist = userService.checkUsername(username);
+        if (isExist) {
+            return ResponseVO.serviceFail("用户已存在");
+        } else {
+            return ResponseVO.success("验证成功");
+        }
+    }
 
-    }*/
+    @PostMapping("updateUserInfo")
+    public ResponseVO updateUserInfo(@RequestBody UserInfo userInfo) {
+        boolean isUpdate = userService.updateUserInfo(userInfo);
+        if (isUpdate) {
+            UserInfo user = userService.queryUserById(userInfo.getUuid());
+            return ResponseVO.success(user);
+        } else {
+            return ResponseVO.serviceFail("用户信息修改失败");
+        }
+    }
+
+    @GetMapping("logout")
+    public ResponseVO logout(){
+        return ResponseVO.success("用户退出成功");
+    }
 
 
     /*@GetMapping("getUserInfo")
