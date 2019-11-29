@@ -59,6 +59,7 @@ public class UserController {
 
     @GetMapping("logout")
     public ResponseVO logout(){
+
         return ResponseVO.success("用户退出成功");
     }
 

@@ -4,21 +4,16 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.api.cinema.CinemaService;
-import com.stylefeng.guns.api.cinema.vo.BaseResVO;
-import com.stylefeng.guns.api.cinema.vo.CinemasConditionResVo;
-import com.stylefeng.guns.api.cinema.vo.ConditionResVO;
-import com.stylefeng.guns.rest.common.persistence.dao.MtimeAreaDictTMapper;
-import com.stylefeng.guns.rest.common.persistence.dao.MtimeBrandDictTMapper;
-import com.stylefeng.guns.rest.common.persistence.dao.MtimeCinemaTMapper;
-import com.stylefeng.guns.rest.common.persistence.dao.MtimeHallDictTMapper;
-import com.stylefeng.guns.rest.common.persistence.model.MtimeAreaDictT;
-import com.stylefeng.guns.rest.common.persistence.model.MtimeBrandDictT;
-import com.stylefeng.guns.rest.common.persistence.model.MtimeCinemaT;
-import com.stylefeng.guns.rest.common.persistence.model.MtimeHallDictT;
+import com.stylefeng.guns.api.cinema.vo.*;
+import com.stylefeng.guns.rest.common.persistence.dao.*;
+import com.stylefeng.guns.rest.common.persistence.model.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -37,6 +32,12 @@ public class CinemaServiceImpl implements CinemaService {
 
     @Autowired
     MtimeCinemaTMapper mtimeCinemaTMapper;
+
+    @Autowired
+    MtimeFieldTMapper mtimeFieldTMapper;
+
+    @Autowired
+    MtimeHallFilmInfoTMapper mtimeHallFilmInfoTMapper;
 
     @Override
     public BaseResVO<ConditionResVO> getCondition(Integer brandId, Integer hallType, Integer areaId) {
@@ -153,6 +154,115 @@ public class CinemaServiceImpl implements CinemaService {
         baseResVO.setNowPage(nowPage);
         baseResVO.setStatus(0);
         baseResVO.setTotalPage(1);
+        return baseResVO;
+    }
+
+
+    @Override
+    public BaseResVO<GetFieldsDataResVO> getFields(Integer cinemaId) {
+        BaseResVO<GetFieldsDataResVO> baseResVO = new BaseResVO<>();
+        GetFieldsDataResVO getFieldsDataResVO = new GetFieldsDataResVO();
+        GetFieldsDataResVO.CinemaInfoBean cinemaInfoBean = new GetFieldsDataResVO.CinemaInfoBean();
+        //cinemaInfo
+        MtimeCinemaT mtimeCinemaT = mtimeCinemaTMapper.selectById(cinemaId);
+        cinemaInfoBean.setCinemaAdress(mtimeCinemaT.getCinemaAddress());
+        cinemaInfoBean.setCinemaId(cinemaId);
+        cinemaInfoBean.setCinemaName(mtimeCinemaT.getCinemaName());
+        cinemaInfoBean.setCinemaPhone(mtimeCinemaT.getCinemaPhone());
+        cinemaInfoBean.setImgUrl(mtimeCinemaT.getImgAddress());
+        getFieldsDataResVO.setCinemaInfo(cinemaInfoBean);
+        //filmList
+        EntityWrapper<MtimeFieldT> mtimeFieldTEntityWrapper = new EntityWrapper<>();
+        mtimeFieldTEntityWrapper.eq("cinema_id",cinemaId);
+        List<MtimeFieldT> mtimeFieldTS = mtimeFieldTMapper.selectList(mtimeFieldTEntityWrapper);
+        ArrayList<GetFieldsDataResVO.FilmListBean> filmListBeans = new ArrayList<>();
+
+        if(!CollectionUtils.isEmpty(mtimeFieldTS))
+        {
+            //get all filmIds
+            HashSet<Integer> filmIds = new HashSet<>();
+            for (MtimeFieldT mtimeFieldT : mtimeFieldTS) {
+                filmIds.add(mtimeFieldT.getFilmId());
+            }
+
+            for (Integer filmId : filmIds) {
+                GetFieldsDataResVO.FilmListBean filmListBean = new GetFieldsDataResVO.FilmListBean();
+                //根据filmId 找 hall_film_Info
+                // except filmFields
+                EntityWrapper<MtimeHallFilmInfoT> mtimeHallFilmInfoTEntityWrapper = new EntityWrapper<>();
+                mtimeHallFilmInfoTEntityWrapper.eq("film_id", filmId);
+                List<MtimeHallFilmInfoT> mtimeHallFilmInfoTS = mtimeHallFilmInfoTMapper.selectList(mtimeHallFilmInfoTEntityWrapper);
+                MtimeHallFilmInfoT mtimeHallFilmInfoT = mtimeHallFilmInfoTS.get(0);
+                BeanUtils.copyProperties(mtimeHallFilmInfoT,filmListBean);
+                filmListBean.setFilmType(mtimeHallFilmInfoT.getFilmLanguage());
+                // filmFields
+                EntityWrapper<MtimeFieldT> mtimeFieldTEntityWrapperForList = new EntityWrapper<>();
+                mtimeFieldTEntityWrapperForList.eq("cinema_id",cinemaId).and().eq("film_id",filmId);
+                List<MtimeFieldT> mtimeFieldTSForList = mtimeFieldTMapper.selectList(mtimeFieldTEntityWrapperForList);
+                ArrayList<GetFieldsDataResVO.FilmListBean.FilmFieldsBean> filmFieldsBeans = new ArrayList<>();
+                for (MtimeFieldT mtimeFieldT : mtimeFieldTSForList) {
+                    GetFieldsDataResVO.FilmListBean.FilmFieldsBean filmFieldsBean = new GetFieldsDataResVO.FilmListBean.FilmFieldsBean();
+                    BeanUtils.copyProperties(mtimeFieldT,filmFieldsBean);
+                    filmFieldsBean.setLanguage(mtimeHallFilmInfoT.getFilmLanguage());
+                    filmFieldsBean.setFieldId(mtimeFieldT.getUuid());
+                    filmFieldsBeans.add(filmFieldsBean);
+                }
+                filmListBean.setFilmFields(filmFieldsBeans);
+                filmListBeans.add(filmListBean);
+            }
+
+        }
+        getFieldsDataResVO.setFilmList(filmListBeans);
+        baseResVO.setData(getFieldsDataResVO);
+        baseResVO.setStatus(0);
+        baseResVO.setImgPre("http://img.meetingshop.cn/");
+        return baseResVO;
+    }
+
+    @Override
+    public BaseResVO<GetFieldInfoDataResVO> getFieldInfo(Integer cinemaId, Integer fieldId) {
+        BaseResVO<GetFieldInfoDataResVO> baseResVO = new BaseResVO<>();
+        GetFieldInfoDataResVO getFieldInfoDataResVO = new GetFieldInfoDataResVO();
+        //cinemaInfo
+        GetFieldInfoDataResVO.CinemaInfoBean cinemaInfoBean = new GetFieldInfoDataResVO.CinemaInfoBean();
+        MtimeCinemaT mtimeCinemaT = mtimeCinemaTMapper.selectById(cinemaId);
+        BeanUtils.copyProperties(mtimeCinemaT,cinemaInfoBean);
+        cinemaInfoBean.setCinemaAdress(mtimeCinemaT.getCinemaAddress());
+        cinemaInfoBean.setCinemaId(cinemaId);
+        cinemaInfoBean.setImgUrl(mtimeCinemaT.getImgAddress());
+        getFieldInfoDataResVO.setCinemaInfo(cinemaInfoBean);
+
+
+        //filmInfo
+        GetFieldInfoDataResVO.FilmInfoBean filmInfoBean = new GetFieldInfoDataResVO.FilmInfoBean();
+        EntityWrapper<MtimeFieldT> mtimeFieldTEntityWrapper = new EntityWrapper<>();
+        MtimeFieldT mtimeFieldT = mtimeFieldTMapper.selectById(fieldId);
+        Integer filmId = mtimeFieldT.getFilmId();
+        EntityWrapper<MtimeHallFilmInfoT> mtimeHallFilmInfoTEntityWrapper = new EntityWrapper<>();
+        mtimeHallFilmInfoTEntityWrapper.eq("film_id", filmId);
+        List<MtimeHallFilmInfoT> mtimeHallFilmInfoTS = mtimeHallFilmInfoTMapper.selectList(mtimeHallFilmInfoTEntityWrapper);
+        MtimeHallFilmInfoT mtimeHallFilmInfoT = mtimeHallFilmInfoTS.get(0);
+        filmInfoBean.setFilmId(filmId);
+        filmInfoBean.setFilmName(mtimeHallFilmInfoT.getFilmName());
+        filmInfoBean.setFilmType(mtimeHallFilmInfoT.getFilmLanguage());
+        filmInfoBean.setImgAddress(mtimeHallFilmInfoT.getImgAddress());
+        filmInfoBean.setFilmCats(mtimeHallFilmInfoT.getFilmCats());
+        filmInfoBean.setFilmLength(mtimeHallFilmInfoT.getFilmLength());
+        getFieldInfoDataResVO.setFilmInfo(filmInfoBean);
+
+        //hallInfo
+        GetFieldInfoDataResVO.HallInfoBean hallInfoBean = new GetFieldInfoDataResVO.HallInfoBean();
+        MtimeHallDictT mtimeHallDictT = mtimeHallDictTMapper.selectById(mtimeFieldT.getHallId());
+        hallInfoBean.setHallName(mtimeFieldT.getHallName());
+        hallInfoBean.setHallFieldId(fieldId);
+        hallInfoBean.setPrice(mtimeFieldT.getPrice());
+        hallInfoBean.setSeatFile(mtimeHallDictT.getSeatAddress());
+        hallInfoBean.setSoldSeats("1,2,3,5,12");
+        getFieldInfoDataResVO.setHallInfo(hallInfoBean);
+
+        baseResVO.setData(getFieldInfoDataResVO);
+        baseResVO.setStatus(0);
+        baseResVO.setImgPre("http://img.meetingshop.cn/");
         return baseResVO;
     }
 }

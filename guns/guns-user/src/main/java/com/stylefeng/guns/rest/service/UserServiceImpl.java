@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @Service(interfaceClass = UserService.class, loadbalance = "roundrobin")
@@ -71,5 +74,20 @@ public class UserServiceImpl implements UserService {
         userInfo.setNickname(mtimeUserT.getNickName());
         // TODO
         return userInfo;
+    }
+
+    @Override
+    public User getUserByUsername(String userName) {
+        User user = new User();
+        user.setUsername(userName);
+        Map<String,Object> map = new HashMap<>();
+        map.put("user_name",userName);
+        List<MtimeUserT> mtimeUserTList = userTMapper.selectByMap(map);
+        if (mtimeUserTList.size() == 1) {
+            String password = MD5Util.encrypt(mtimeUserTList.get(0).getUserPwd());
+            user.setPassword(password);
+            return user;
+        }
+        return null;
     }
 }
