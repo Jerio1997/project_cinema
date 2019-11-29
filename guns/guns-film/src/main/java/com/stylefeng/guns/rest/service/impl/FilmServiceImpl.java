@@ -49,8 +49,8 @@ public class FilmServiceImpl implements FilmService {
         if (CollectionUtils.isEmpty(mtimeBannerTs)) {
             return banners;
         }
-        BannerVO banner = new BannerVO();
         for (MtimeBannerT mtimeBannerT : mtimeBannerTs) {
+            BannerVO banner = new BannerVO();
             banner.setBannerId(mtimeBannerT.getUuid().toString());
             banner.setBannerAddress(mtimeBannerT.getBannerAddress());
             banner.setBannerUrl(mtimeBannerT.getBannerUrl());
@@ -84,8 +84,9 @@ public class FilmServiceImpl implements FilmService {
         if (CollectionUtils.isEmpty(mtimeFilmTS)) {
             return filmInfos;
         }
-        FilmInfo filmInfo = new FilmInfo();
+
         for (MtimeFilmT mtimeFilmT : mtimeFilmTS) {
+            FilmInfo filmInfo = new FilmInfo();
             filmInfo.setFilmId(mtimeFilmT.getUuid().toString());
             filmInfo.setFilmName(mtimeFilmT.getFilmName());
             filmInfo.setImgAddress(mtimeFilmT.getImgAddress());
@@ -120,8 +121,9 @@ public class FilmServiceImpl implements FilmService {
         if (CollectionUtils.isEmpty(mtimeFilmTS)) {
             return filmInfos;
         }
-        FilmInfo filmInfo = new FilmInfo();
+
         for (MtimeFilmT mtimeFilmT : mtimeFilmTS) {
+            FilmInfo filmInfo = new FilmInfo();
             filmInfo.setFilmId(mtimeFilmT.getUuid().toString());
             filmInfo.setFilmName(mtimeFilmT.getFilmName());
             filmInfo.setImgAddress(mtimeFilmT.getImgAddress());
@@ -149,8 +151,9 @@ public class FilmServiceImpl implements FilmService {
         if (CollectionUtils.isEmpty(mtimeFilmTS)) {
             return filmInfos;
         }
-        FilmInfo filmInfo = new FilmInfo();
+
         for (MtimeFilmT mtimeFilmT : mtimeFilmTS) {
+            FilmInfo filmInfo = new FilmInfo();
             filmInfo.setFilmId(mtimeFilmT.getUuid().toString());
             filmInfo.setFilmName(mtimeFilmT.getFilmName());
             filmInfo.setImgAddress(mtimeFilmT.getImgAddress());
@@ -175,8 +178,9 @@ public class FilmServiceImpl implements FilmService {
         if (CollectionUtils.isEmpty(mtimeFilmTS)) {
             return filmInfos;
         }
-        FilmInfo filmInfo = new FilmInfo();
+
         for (MtimeFilmT mtimeFilmT : mtimeFilmTS) {
+            FilmInfo filmInfo = new FilmInfo();
             filmInfo.setFilmId(mtimeFilmT.getUuid().toString());
             filmInfo.setFilmName(mtimeFilmT.getFilmName());
             filmInfo.setImgAddress(mtimeFilmT.getImgAddress());
@@ -200,8 +204,9 @@ public class FilmServiceImpl implements FilmService {
         if (CollectionUtils.isEmpty(mtimeFilmTS)) {
             return filmInfos;
         }
-        FilmInfo filmInfo = new FilmInfo();
+
         for (MtimeFilmT mtimeFilmT : mtimeFilmTS) {
+            FilmInfo filmInfo = new FilmInfo();
             filmInfo.setFilmId(mtimeFilmT.getUuid().toString());
             filmInfo.setFilmName(mtimeFilmT.getFilmName());
             filmInfo.setImgAddress(mtimeFilmT.getImgAddress());
@@ -224,9 +229,10 @@ public class FilmServiceImpl implements FilmService {
         if (CollectionUtils.isEmpty(mtimeCatDictTS)) {
             return catVOList;
         }
-        CatVO catVO = new CatVO();
+
         String uuid = null;
         for (MtimeCatDictT mtimeCatDictT : mtimeCatDictTS) {
+            CatVO catVO = new CatVO();
             uuid = mtimeCatDictT.getUuid().toString();
             catVO.setCatId(uuid);
             catVO.setCatName(mtimeCatDictT.getShowName());
@@ -254,9 +260,10 @@ public class FilmServiceImpl implements FilmService {
         if (CollectionUtils.isEmpty(mtimeSourceDictTS)) {
             return sourceVOList;
         }
-        SourceVO sourceVO = new SourceVO();
+
         String uuid = null;
         for (MtimeSourceDictT mtimeSourceDictT : mtimeSourceDictTS) {
+            SourceVO sourceVO = new SourceVO();
             uuid = mtimeSourceDictT.getUuid().toString();
             sourceVO.setSourceId(uuid);
             sourceVO.setSourceName(mtimeSourceDictT.getShowName());
@@ -285,8 +292,9 @@ public class FilmServiceImpl implements FilmService {
             return yearVOList;
         }
         String uuid = null;
-        YearVO yearVO = new YearVO();
+
         for (MtimeYearDictT mtimeYearDictT : mtimeYearDictTS) {
+            YearVO yearVO = new YearVO();
             uuid = mtimeYearDictT.getUuid().toString();
             yearVO.setYearId(uuid);
             yearVO.setYearName(mtimeYearDictT.getShowName());
