@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.api.film.vo.*;
 import com.stylefeng.guns.rest.common.persistence.dao.*;
 import com.stylefeng.guns.api.film.FilmService;
+import com.stylefeng.guns.rest.common.persistence.model.*;
 import com.stylefeng.guns.rest.common.persistence.model.MtimeActorT;
 import com.stylefeng.guns.rest.common.persistence.model.MtimeBannerT;
 import com.stylefeng.guns.rest.common.persistence.model.MtimeFilmInfoT;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -36,6 +36,13 @@ public class FilmServiceImpl implements FilmService {
     private MtimeFilmInfoTMapper mtimeFilmInfoTMapper;
     @Autowired
     private MtimeActorTMapper mtimeActorTMapper;
+    @Autowired
+    private MtimeCatDictTMapper mtimeCatDictTMapper;
+    @Autowired
+    private MtimeSourceDictTMapper mtimeSourceDictTMapper;
+    @Autowired
+    private MtimeYearDictTMapper mtimeYearDictTMapper;
+
 
     @Override
     public List<BannerVO> getBanners() {
@@ -469,5 +476,97 @@ public class FilmServiceImpl implements FilmService {
 
         List<ActorVO> actorVOS = mtimeActorTMapper.getActors(filmId);
         return actorVOS;
+    }
+
+    @Override
+    public List<CatVO> getCats(String catId) {
+        EntityWrapper<MtimeCatDictT> wrapper = new EntityWrapper<>();
+        List<MtimeCatDictT> mtimeCatDictTS = mtimeCatDictTMapper.selectList(wrapper);
+        List<CatVO> catVOList = convert2CatVOList(mtimeCatDictTS, catId);
+        return catVOList;
+    }
+
+    private List<CatVO> convert2CatVOList(List<MtimeCatDictT> mtimeCatDictTS, String catId) {
+        List<CatVO> catVOList = new ArrayList<>();
+        if (CollectionUtils.isEmpty(mtimeCatDictTS)) {
+            return catVOList;
+        }
+
+        String uuid = null;
+        for (MtimeCatDictT mtimeCatDictT : mtimeCatDictTS) {
+            CatVO catVO = new CatVO();
+            uuid = mtimeCatDictT.getUuid().toString();
+            catVO.setCatId(uuid);
+            catVO.setCatName(mtimeCatDictT.getShowName());
+            if (uuid.equals(catId)) {
+                catVO.setActive(true);
+            } else {
+                catVO.setActive(false);
+            }
+            catVOList.add(catVO);
+        }
+        return catVOList;
+    }
+
+    @Override
+    public List<SourceVO> getSource(String sourceId) {
+        EntityWrapper<MtimeSourceDictT> wrapper = new EntityWrapper<>();
+        List<MtimeSourceDictT> mtimeSourceDictTS = mtimeSourceDictTMapper.selectList(wrapper);
+        List<SourceVO> sourceVOList = convert2SourceVOList(mtimeSourceDictTS, sourceId);
+        return sourceVOList;
+    }
+
+    private List<SourceVO> convert2SourceVOList(List<MtimeSourceDictT> mtimeSourceDictTS, String sourceId) {
+
+        List<SourceVO> sourceVOList = new ArrayList<>();
+        if (CollectionUtils.isEmpty(mtimeSourceDictTS)) {
+            return sourceVOList;
+        }
+
+        String uuid = null;
+        for (MtimeSourceDictT mtimeSourceDictT : mtimeSourceDictTS) {
+            SourceVO sourceVO = new SourceVO();
+            uuid = mtimeSourceDictT.getUuid().toString();
+            sourceVO.setSourceId(uuid);
+            sourceVO.setSourceName(mtimeSourceDictT.getShowName());
+            if(uuid.equals(sourceId)){
+                sourceVO.setActive(true);
+            }else {
+                sourceVO.setActive(false);
+            }
+            sourceVOList.add(sourceVO);
+        }
+        return sourceVOList;
+    }
+
+    @Override
+    public List<YearVO> getYears(String yearId) {
+        EntityWrapper<MtimeYearDictT> wrapper = new EntityWrapper<>();
+        List<MtimeYearDictT> mtimeYearDictTS = mtimeYearDictTMapper.selectList(wrapper);
+        List<YearVO> yearVOList = convert2YearVOList(mtimeYearDictTS, yearId);
+        return yearVOList;
+    }
+
+    private List<YearVO> convert2YearVOList(List<MtimeYearDictT> mtimeYearDictTS, String yearId) {
+
+        List<YearVO> yearVOList = new ArrayList<>();
+        if(CollectionUtils.isEmpty(mtimeYearDictTS)){
+            return yearVOList;
+        }
+        String uuid = null;
+
+        for (MtimeYearDictT mtimeYearDictT : mtimeYearDictTS) {
+            YearVO yearVO = new YearVO();
+            uuid = mtimeYearDictT.getUuid().toString();
+            yearVO.setYearId(uuid);
+            yearVO.setYearName(mtimeYearDictT.getShowName());
+            if(uuid.equals(yearId)){
+                yearVO.setActive(true);
+            }else {
+                yearVO.setActive(false);
+            }
+            yearVOList.add(yearVO);
+        }
+        return yearVOList;
     }
 }

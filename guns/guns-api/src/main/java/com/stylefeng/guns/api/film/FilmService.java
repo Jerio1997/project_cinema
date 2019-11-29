@@ -38,4 +38,10 @@ public interface FilmService {
     ActorVO getDectInfo(String filmId);
 
     List<ActorVO> getActors(String filmId);
+
+    List<CatVO> getCats(String catId);
+
+    List<SourceVO> getSource(String sourceId);
+
+    List<YearVO> getYears(String yearId);
 }

@@ -35,6 +35,8 @@ public class FilmController {
                 filmRespVO.setMsg("查询失败，无banner可加载");
                 return filmRespVO;
             }
+            //查询数据库
+            //参数是每页显示最大条目数，在service层使用
             FilmVO hotFilms = filmService.getHotFilms(true, 8);
             FilmVO soonFilms = filmService.getSoonFilms(true, 8);
             List<FilmInfo> boxRanking = filmService.getBoxRanking(10);
@@ -57,6 +59,42 @@ public class FilmController {
         filmRespVO.setStatus(0);
         filmRespVO.setImgPre("http://img.meetingshop.cn/");
 
+        return filmRespVO;
+    }
+
+    @RequestMapping("getConditionList")
+    public FilmRespVO getConditionList(String catId, String sourceId, String yearId) {
+
+        //默认值是99
+        if (catId == null) catId = "99";
+        if (sourceId == null) sourceId = "99";
+        if (yearId == null) yearId = "99";
+
+        FilmRespVO filmRespVO = new FilmRespVO();
+        FilmConditionVO filmConditionVO = new FilmConditionVO();
+
+        try {
+            //数据库中查得
+            List<CatVO> catInfo = filmService.getCats(catId);
+            List<SourceVO> sourceInfo = filmService.getSource(sourceId);
+            List<YearVO> yearInfo = filmService.getYears(yearId);
+            if (catInfo == null || sourceInfo == null || yearInfo == null) {
+                filmRespVO.setStatus(1);
+                filmRespVO.setMsg("查询失败，无条件可加载");
+                return filmRespVO;
+            }
+
+            filmConditionVO.setCatInfo(catInfo);
+            filmConditionVO.setSourceInfo(sourceInfo);
+            filmConditionVO.setYearInfo(yearInfo);
+        } catch (Exception e) {
+            filmRespVO.setStatus(999);
+            filmRespVO.setMsg("系统出现异常，请联系管理员");
+            return filmRespVO;
+        }
+
+        filmRespVO.setData(filmConditionVO);
+        filmRespVO.setStatus(0);
         return filmRespVO;
     }
 
