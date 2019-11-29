@@ -1,3 +1,4 @@
+/*
 package com.stylefeng.guns.rest.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
@@ -207,3 +208,4 @@ public class GetFilmsAndFilmsServiceImpl implements GetFilmsAndFilmsService {
         return getFilmVo;
     }
 }
+*/
