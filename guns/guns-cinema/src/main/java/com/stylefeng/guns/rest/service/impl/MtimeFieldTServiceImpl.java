@@ -1,8 +1,8 @@
-package service.impl;
+package com.stylefeng.guns.rest.service.impl;
 
 import com.stylefeng.guns.rest.common.persistence.model.MtimeFieldT;
 import com.stylefeng.guns.rest.common.persistence.dao.MtimeFieldTMapper;
-import service.IMtimeFieldTService;
+import com.stylefeng.guns.rest.service.IMtimeFieldTService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 

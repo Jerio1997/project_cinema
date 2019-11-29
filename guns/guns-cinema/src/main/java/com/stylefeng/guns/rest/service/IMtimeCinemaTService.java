@@ -1,4 +1,4 @@
-package service;
+package com.stylefeng.guns.rest.service;
 
 import com.stylefeng.guns.rest.common.persistence.model.MtimeCinemaT;
 import com.baomidou.mybatisplus.service.IService;
