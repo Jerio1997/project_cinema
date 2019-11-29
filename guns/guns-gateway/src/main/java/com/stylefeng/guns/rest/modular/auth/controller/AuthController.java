@@ -1,17 +1,21 @@
 package com.stylefeng.guns.rest.modular.auth.controller;
 
+import com.stylefeng.guns.api.user.vo.UserLoginResVO;
 import com.stylefeng.guns.core.exception.GunsException;
 import com.stylefeng.guns.rest.common.exception.BizExceptionEnum;
 import com.stylefeng.guns.rest.modular.auth.controller.dto.AuthRequest;
 import com.stylefeng.guns.rest.modular.auth.controller.dto.AuthResponse;
 import com.stylefeng.guns.rest.modular.auth.util.JwtTokenUtil;
 import com.stylefeng.guns.rest.modular.auth.validator.IReqValidator;
+import com.stylefeng.guns.rest.modular.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 请求验证的
@@ -28,17 +32,33 @@ public class AuthController {
     @Resource(name = "simpleValidator")
     private IReqValidator reqValidator;
 
-    @RequestMapping(value = "${jwt.auth-path}")
-    public ResponseEntity<?> createAuthenticationToken(AuthRequest authRequest) {
+    @Autowired
+    private RedisTemplate redisTemplate;
 
-        boolean validate = reqValidator.validate(authRequest);
+//    @RequestMapping(value = "${jwt.auth-path}")
+    @RequestMapping(value = "auth")
+    public ResponseVO createAuthenticationToken(AuthRequest authRequest) {
+        UserLoginResVO userLoginResVO = new UserLoginResVO();
+        //校验用户名和密码
+//        boolean validate = reqValidator.validate(authRequest);
+//        UserVo userVo = userService.Login(authRequest);
+        //把用户信息返回过来
 
-        if (validate) {
+
+
+
+        /*if (validate) {
             final String randomKey = jwtTokenUtil.getRandomKey();
             final String token = jwtTokenUtil.generateToken(authRequest.getUserName(), randomKey);
+
+            redisTemplate.opsForValue().set(token,uservo);
+            redisTemplate.expire(token,300, TimeUnit.SECONDS);
+
+
             return ResponseEntity.ok(new AuthResponse(token, randomKey));
         } else {
             throw new GunsException(BizExceptionEnum.AUTH_REQUEST_ERROR);
-        }
+        }*/
+        return ResponseVO.success(userLoginResVO);
     }
 }
