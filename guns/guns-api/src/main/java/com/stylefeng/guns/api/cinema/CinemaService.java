@@ -1,6 +1,7 @@
 package com.stylefeng.guns.api.cinema;
 
 import com.stylefeng.guns.api.cinema.vo.BaseResVO;
+import com.stylefeng.guns.api.cinema.vo.GetFieldInfoDataResVO;
 import com.stylefeng.guns.api.cinema.vo.GetFieldsDataResVO;
 
 public interface CinemaService {
@@ -9,5 +10,7 @@ public interface CinemaService {
     BaseResVO getCinemas(Integer brandId, Integer hallType, Integer areaId, Integer pageSize, Integer nowPage);
 
     BaseResVO<GetFieldsDataResVO> getFields(Integer cinemaId);
+
+    BaseResVO<GetFieldInfoDataResVO> getFieldInfo(Integer cinemaId, Integer fieldId);
 
 }

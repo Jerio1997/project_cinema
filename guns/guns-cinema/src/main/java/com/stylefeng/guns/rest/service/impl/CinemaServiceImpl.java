@@ -4,10 +4,7 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.api.cinema.CinemaService;
-import com.stylefeng.guns.api.cinema.vo.BaseResVO;
-import com.stylefeng.guns.api.cinema.vo.CinemasConditionResVo;
-import com.stylefeng.guns.api.cinema.vo.ConditionResVO;
-import com.stylefeng.guns.api.cinema.vo.GetFieldsDataResVO;
+import com.stylefeng.guns.api.cinema.vo.*;
 import com.stylefeng.guns.rest.common.persistence.dao.*;
 import com.stylefeng.guns.rest.common.persistence.model.*;
 import org.springframework.beans.BeanUtils;
@@ -217,6 +214,53 @@ public class CinemaServiceImpl implements CinemaService {
         }
         getFieldsDataResVO.setFilmList(filmListBeans);
         baseResVO.setData(getFieldsDataResVO);
+        baseResVO.setStatus(0);
+        baseResVO.setImgPre("http://img.meetingshop.cn/");
+        return baseResVO;
+    }
+
+    @Override
+    public BaseResVO<GetFieldInfoDataResVO> getFieldInfo(Integer cinemaId, Integer fieldId) {
+        BaseResVO<GetFieldInfoDataResVO> baseResVO = new BaseResVO<>();
+        GetFieldInfoDataResVO getFieldInfoDataResVO = new GetFieldInfoDataResVO();
+        //cinemaInfo
+        GetFieldInfoDataResVO.CinemaInfoBean cinemaInfoBean = new GetFieldInfoDataResVO.CinemaInfoBean();
+        MtimeCinemaT mtimeCinemaT = mtimeCinemaTMapper.selectById(cinemaId);
+        BeanUtils.copyProperties(mtimeCinemaT,cinemaInfoBean);
+        cinemaInfoBean.setCinemaAdress(mtimeCinemaT.getCinemaAddress());
+        cinemaInfoBean.setCinemaId(cinemaId);
+        cinemaInfoBean.setImgUrl(mtimeCinemaT.getImgAddress());
+        getFieldInfoDataResVO.setCinemaInfo(cinemaInfoBean);
+
+
+        //filmInfo
+        GetFieldInfoDataResVO.FilmInfoBean filmInfoBean = new GetFieldInfoDataResVO.FilmInfoBean();
+        EntityWrapper<MtimeFieldT> mtimeFieldTEntityWrapper = new EntityWrapper<>();
+        MtimeFieldT mtimeFieldT = mtimeFieldTMapper.selectById(fieldId);
+        Integer filmId = mtimeFieldT.getFilmId();
+        EntityWrapper<MtimeHallFilmInfoT> mtimeHallFilmInfoTEntityWrapper = new EntityWrapper<>();
+        mtimeHallFilmInfoTEntityWrapper.eq("film_id", filmId);
+        List<MtimeHallFilmInfoT> mtimeHallFilmInfoTS = mtimeHallFilmInfoTMapper.selectList(mtimeHallFilmInfoTEntityWrapper);
+        MtimeHallFilmInfoT mtimeHallFilmInfoT = mtimeHallFilmInfoTS.get(0);
+        filmInfoBean.setFilmId(filmId);
+        filmInfoBean.setFilmName(mtimeHallFilmInfoT.getFilmName());
+        filmInfoBean.setFilmType(mtimeHallFilmInfoT.getFilmLanguage());
+        filmInfoBean.setImgAddress(mtimeHallFilmInfoT.getImgAddress());
+        filmInfoBean.setFilmCats(mtimeHallFilmInfoT.getFilmCats());
+        filmInfoBean.setFilmLength(mtimeHallFilmInfoT.getFilmLength());
+        getFieldInfoDataResVO.setFilmInfo(filmInfoBean);
+
+        //hallInfo
+        GetFieldInfoDataResVO.HallInfoBean hallInfoBean = new GetFieldInfoDataResVO.HallInfoBean();
+        MtimeHallDictT mtimeHallDictT = mtimeHallDictTMapper.selectById(mtimeFieldT.getHallId());
+        hallInfoBean.setHallName(mtimeFieldT.getHallName());
+        hallInfoBean.setHallFieldId(fieldId);
+        hallInfoBean.setPrice(mtimeFieldT.getPrice());
+        hallInfoBean.setSeatFile(mtimeHallDictT.getSeatAddress());
+        hallInfoBean.setSoldSeats("1,2,3,5,12");
+        getFieldInfoDataResVO.setHallInfo(hallInfoBean);
+
+        baseResVO.setData(getFieldInfoDataResVO);
         baseResVO.setStatus(0);
         baseResVO.setImgPre("http://img.meetingshop.cn/");
         return baseResVO;
