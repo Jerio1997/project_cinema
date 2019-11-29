@@ -3,21 +3,15 @@ package com.stylefeng.guns.rest.service.impl;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
-import com.stylefeng.guns.api.film.vo.BannerVO;
-import com.stylefeng.guns.api.film.vo.FilmInfo;
-import com.stylefeng.guns.api.film.vo.FilmVO;
-import com.stylefeng.guns.rest.common.persistence.dao.MtimeBannerTMapper;
-import com.stylefeng.guns.rest.common.persistence.dao.MtimeFilmTMapper;
+import com.stylefeng.guns.api.film.vo.*;
+import com.stylefeng.guns.rest.common.persistence.dao.*;
 import com.stylefeng.guns.api.film.FilmService;
-import com.stylefeng.guns.rest.common.persistence.model.MtimeBannerT;
-import com.stylefeng.guns.rest.common.persistence.model.MtimeFilmT;
-import org.springframework.beans.BeanUtils;
+import com.stylefeng.guns.rest.common.persistence.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -26,19 +20,25 @@ import java.util.List;
  **/
 
 @Component
-@Service(interfaceClass = FilmService.class,loadbalance = "roundrobin")
+@Service(interfaceClass = FilmService.class, loadbalance = "roundrobin")
 public class FilmServiceImpl implements FilmService {
 
     @Autowired
     private MtimeFilmTMapper mtimeFilmTMapper;
     @Autowired
     private MtimeBannerTMapper mtimeBannerTMapper;
+    @Autowired
+    private MtimeCatDictTMapper mtimeCatDictTMapper;
+    @Autowired
+    private MtimeSourceDictTMapper mtimeSourceDictTMapper;
+    @Autowired
+    private MtimeYearDictTMapper mtimeYearDictTMapper;
 
 
     @Override
     public List<BannerVO> getBanners() {
         EntityWrapper wrapper = new EntityWrapper();
-        wrapper.eq("is_valid",0);
+        wrapper.eq("is_valid", 0);
         List<MtimeBannerT> mtimeBannerTs = mtimeBannerTMapper.selectList(wrapper);
         List<BannerVO> banners = conert2ListBannerVO(mtimeBannerTs);
         return banners;
@@ -46,7 +46,7 @@ public class FilmServiceImpl implements FilmService {
 
     private List<BannerVO> conert2ListBannerVO(List<MtimeBannerT> mtimeBannerTs) {
         List<BannerVO> banners = new ArrayList<>();
-        if(CollectionUtils.isEmpty(mtimeBannerTs)){
+        if (CollectionUtils.isEmpty(mtimeBannerTs)) {
             return banners;
         }
         BannerVO banner = new BannerVO();
@@ -63,14 +63,14 @@ public class FilmServiceImpl implements FilmService {
     public FilmVO getHotFilms(boolean isLimit, int nums) {
         FilmVO hotFilms = new FilmVO();
         EntityWrapper wrapper = new EntityWrapper();
-        wrapper.eq("film_status",1);
+        wrapper.eq("film_status", 1);
         Integer count = mtimeFilmTMapper.selectCount(wrapper);
         hotFilms.setFilmNum(count);
         List<MtimeFilmT> mtimeFilmTS;
-        if(isLimit) {
+        if (isLimit) {
             Page page = new Page(1, nums);
-            mtimeFilmTS = mtimeFilmTMapper.selectPage(page,wrapper);
-        }else{
+            mtimeFilmTS = mtimeFilmTMapper.selectPage(page, wrapper);
+        } else {
             mtimeFilmTS = mtimeFilmTMapper.selectList(wrapper);
         }
         List<FilmInfo> filmInfos = convert2HotFilmInfo(mtimeFilmTS);
@@ -81,7 +81,7 @@ public class FilmServiceImpl implements FilmService {
 
     private List<FilmInfo> convert2HotFilmInfo(List<MtimeFilmT> mtimeFilmTS) {
         List<FilmInfo> filmInfos = new ArrayList<>();
-        if(CollectionUtils.isEmpty(mtimeFilmTS)){
+        if (CollectionUtils.isEmpty(mtimeFilmTS)) {
             return filmInfos;
         }
         FilmInfo filmInfo = new FilmInfo();
@@ -100,14 +100,14 @@ public class FilmServiceImpl implements FilmService {
     public FilmVO getSoonFilms(boolean isLimit, int nums) {
         FilmVO soonFilms = new FilmVO();
         EntityWrapper wrapper = new EntityWrapper();
-        wrapper.eq("film_status",2);
+        wrapper.eq("film_status", 2);
         Integer count = mtimeFilmTMapper.selectCount(wrapper);
         soonFilms.setFilmNum(count);
         List<MtimeFilmT> mtimeFilmTS;
-        if(isLimit) {
+        if (isLimit) {
             Page page = new Page(1, nums);
-            mtimeFilmTS = mtimeFilmTMapper.selectPage(page,wrapper);
-        }else{
+            mtimeFilmTS = mtimeFilmTMapper.selectPage(page, wrapper);
+        } else {
             mtimeFilmTS = mtimeFilmTMapper.selectList(wrapper);
         }
         List<FilmInfo> filmInfos = convert2SoonFilmInfo(mtimeFilmTS);
@@ -117,7 +117,7 @@ public class FilmServiceImpl implements FilmService {
 
     private List<FilmInfo> convert2SoonFilmInfo(List<MtimeFilmT> mtimeFilmTS) {
         List<FilmInfo> filmInfos = new ArrayList<>();
-        if(CollectionUtils.isEmpty(mtimeFilmTS)){
+        if (CollectionUtils.isEmpty(mtimeFilmTS)) {
             return filmInfos;
         }
         FilmInfo filmInfo = new FilmInfo();
@@ -137,7 +137,7 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public List<FilmInfo> getBoxRanking(Integer count) {
 
-        Page<MtimeFilmT> page = new Page<>(1,count,"film_box_office",false);
+        Page<MtimeFilmT> page = new Page<>(1, count, "film_box_office", false);
         EntityWrapper<MtimeFilmT> wrapper = new EntityWrapper<>();
         List<MtimeFilmT> mtimeFilmTS = mtimeFilmTMapper.selectPage(page, wrapper);
         List<FilmInfo> filmInfos = convert2BoxRanking(mtimeFilmTS);
@@ -146,7 +146,7 @@ public class FilmServiceImpl implements FilmService {
 
     private List<FilmInfo> convert2BoxRanking(List<MtimeFilmT> mtimeFilmTS) {
         List<FilmInfo> filmInfos = new ArrayList<FilmInfo>();
-        if(CollectionUtils.isEmpty(mtimeFilmTS)){
+        if (CollectionUtils.isEmpty(mtimeFilmTS)) {
             return filmInfos;
         }
         FilmInfo filmInfo = new FilmInfo();
@@ -163,7 +163,7 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public List<FilmInfo> getExpectRanking(Integer count) {
 
-        Page<MtimeFilmT> page = new Page<>(1,count,"film_preSaleNum",false);
+        Page<MtimeFilmT> page = new Page<>(1, count, "film_preSaleNum", false);
         EntityWrapper<MtimeFilmT> wrapper = new EntityWrapper<>();
         List<MtimeFilmT> mtimeFilmTS = mtimeFilmTMapper.selectPage(page, wrapper);
         List<FilmInfo> filmInfos = convert2ExpectRanking(mtimeFilmTS);
@@ -172,7 +172,7 @@ public class FilmServiceImpl implements FilmService {
 
     private List<FilmInfo> convert2ExpectRanking(List<MtimeFilmT> mtimeFilmTS) {
         List<FilmInfo> filmInfos = new ArrayList<FilmInfo>();
-        if(CollectionUtils.isEmpty(mtimeFilmTS)){
+        if (CollectionUtils.isEmpty(mtimeFilmTS)) {
             return filmInfos;
         }
         FilmInfo filmInfo = new FilmInfo();
@@ -188,7 +188,7 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public List<FilmInfo> getTop(Integer count) {
-        Page<MtimeFilmT> page = new Page<>(1,count,"film_score",false);
+        Page<MtimeFilmT> page = new Page<>(1, count, "film_score", false);
         EntityWrapper<MtimeFilmT> wrapper = new EntityWrapper<>();
         List<MtimeFilmT> mtimeFilmTS = mtimeFilmTMapper.selectPage(page, wrapper);
         List<FilmInfo> filmInfos = convert2Top(mtimeFilmTS);
@@ -197,7 +197,7 @@ public class FilmServiceImpl implements FilmService {
 
     private List<FilmInfo> convert2Top(List<MtimeFilmT> mtimeFilmTS) {
         List<FilmInfo> filmInfos = new ArrayList<FilmInfo>();
-        if(CollectionUtils.isEmpty(mtimeFilmTS)){
+        if (CollectionUtils.isEmpty(mtimeFilmTS)) {
             return filmInfos;
         }
         FilmInfo filmInfo = new FilmInfo();
@@ -209,5 +209,94 @@ public class FilmServiceImpl implements FilmService {
             filmInfos.add(filmInfo);
         }
         return filmInfos;
+    }
+
+    @Override
+    public List<CatVO> getCats(String catId) {
+        EntityWrapper<MtimeCatDictT> wrapper = new EntityWrapper<>();
+        List<MtimeCatDictT> mtimeCatDictTS = mtimeCatDictTMapper.selectList(wrapper);
+        List<CatVO> catVOList = convert2CatVOList(mtimeCatDictTS, catId);
+        return catVOList;
+    }
+
+    private List<CatVO> convert2CatVOList(List<MtimeCatDictT> mtimeCatDictTS, String catId) {
+        List<CatVO> catVOList = new ArrayList<>();
+        if (CollectionUtils.isEmpty(mtimeCatDictTS)) {
+            return catVOList;
+        }
+        CatVO catVO = new CatVO();
+        String uuid = null;
+        for (MtimeCatDictT mtimeCatDictT : mtimeCatDictTS) {
+            uuid = mtimeCatDictT.getUuid().toString();
+            catVO.setCatId(uuid);
+            catVO.setCatName(mtimeCatDictT.getShowName());
+            if (uuid.equals(catId)) {
+                catVO.setActive(true);
+            } else {
+                catVO.setActive(false);
+            }
+            catVOList.add(catVO);
+        }
+        return catVOList;
+    }
+
+    @Override
+    public List<SourceVO> getSource(String sourceId) {
+        EntityWrapper<MtimeSourceDictT> wrapper = new EntityWrapper<>();
+        List<MtimeSourceDictT> mtimeSourceDictTS = mtimeSourceDictTMapper.selectList(wrapper);
+        List<SourceVO> sourceVOList = convert2SourceVOList(mtimeSourceDictTS, sourceId);
+        return sourceVOList;
+    }
+
+    private List<SourceVO> convert2SourceVOList(List<MtimeSourceDictT> mtimeSourceDictTS, String sourceId) {
+
+        List<SourceVO> sourceVOList = new ArrayList<>();
+        if (CollectionUtils.isEmpty(mtimeSourceDictTS)) {
+            return sourceVOList;
+        }
+        SourceVO sourceVO = new SourceVO();
+        String uuid = null;
+        for (MtimeSourceDictT mtimeSourceDictT : mtimeSourceDictTS) {
+            uuid = mtimeSourceDictT.getUuid().toString();
+            sourceVO.setSourceId(uuid);
+            sourceVO.setSourceName(mtimeSourceDictT.getShowName());
+            if(uuid.equals(sourceId)){
+                sourceVO.setActive(true);
+            }else {
+                sourceVO.setActive(false);
+            }
+            sourceVOList.add(sourceVO);
+        }
+        return sourceVOList;
+    }
+
+    @Override
+    public List<YearVO> getYears(String yearId) {
+        EntityWrapper<MtimeYearDictT> wrapper = new EntityWrapper<>();
+        List<MtimeYearDictT> mtimeYearDictTS = mtimeYearDictTMapper.selectList(wrapper);
+        List<YearVO> yearVOList = convert2YearVOList(mtimeYearDictTS, yearId);
+        return yearVOList;
+    }
+
+    private List<YearVO> convert2YearVOList(List<MtimeYearDictT> mtimeYearDictTS, String yearId) {
+
+        List<YearVO> yearVOList = new ArrayList<>();
+        if(CollectionUtils.isEmpty(mtimeYearDictTS)){
+            return yearVOList;
+        }
+        String uuid = null;
+        YearVO yearVO = new YearVO();
+        for (MtimeYearDictT mtimeYearDictT : mtimeYearDictTS) {
+            uuid = mtimeYearDictT.getUuid().toString();
+            yearVO.setYearId(uuid);
+            yearVO.setYearName(mtimeYearDictT.getShowName());
+            if(uuid.equals(yearId)){
+                yearVO.setActive(true);
+            }else {
+                yearVO.setActive(false);
+            }
+            yearVOList.add(yearVO);
+        }
+        return yearVOList;
     }
 }

@@ -17,17 +17,17 @@ import java.util.List;
 @RequestMapping("film")
 public class FilmController {
 
-    @Reference(interfaceClass = FilmService.class,check = false)
+    @Reference(interfaceClass = FilmService.class, check = false)
     private FilmService filmService;
 
     @RequestMapping("getIndex")
-    public FilmRespVO getIndex(){
+    public FilmRespVO getIndex() {
         FilmRespVO filmRespVO = new FilmRespVO();
         FilmIndexVO filmIndexVO = new FilmIndexVO();
 
         try {
             List<BannerVO> banners = filmService.getBanners();
-            if(CollectionUtils.isEmpty(banners)){
+            if (CollectionUtils.isEmpty(banners)) {
                 filmRespVO.setStatus(1);
                 filmRespVO.setMsg("查询失败，无banner可加载");
                 return filmRespVO;
@@ -54,6 +54,40 @@ public class FilmController {
         filmRespVO.setStatus(0);
         filmRespVO.setImgPre("http://img.meetingshop.cn/");
 
+        return filmRespVO;
+    }
+
+    @RequestMapping("getConditionList")
+    public FilmRespVO getConditionList(String catId, String sourceId, String yearId) {
+
+        if (catId == null) catId = "99";
+        if (sourceId == null) sourceId = "99";
+        if (yearId == null) yearId = "99";
+
+        FilmRespVO filmRespVO = new FilmRespVO();
+        FilmConditionVO filmConditionVO = new FilmConditionVO();
+
+        try {
+            List<CatVO> catInfo = filmService.getCats(catId);
+            List<SourceVO> sourceInfo = filmService.getSource(sourceId);
+            List<YearVO> yearInfo = filmService.getYears(yearId);
+            if (catInfo == null || sourceInfo == null || yearInfo == null) {
+                filmRespVO.setStatus(1);
+                filmRespVO.setMsg("查询失败，无条件可加载");
+                return filmRespVO;
+            }
+
+            filmConditionVO.setCatInfo(catInfo);
+            filmConditionVO.setSourceInfo(sourceInfo);
+            filmConditionVO.setYearInfo(yearInfo);
+        } catch (Exception e) {
+            filmRespVO.setStatus(999);
+            filmRespVO.setMsg("系统出现异常，请联系管理员");
+            return filmRespVO;
+        }
+
+        filmRespVO.setData(filmConditionVO);
+        filmRespVO.setStatus(0);
         return filmRespVO;
     }
 
