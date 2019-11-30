@@ -8,11 +8,8 @@ jwt:
   expiration: 604800      #7天 单位:秒
   auth-path: auth         #认证请求的路径
   md5-key: randomKey      #md5加密混淆key
-<<<<<<< HEAD
-  ignore-url: /auth,/film/index
-=======
   ignore-url: /auth,/film
->>>>>>> ec012102414198cafa2e9af978f9f6f3598ea81d
+
 
 server:
   port: 8080 #项目端口
