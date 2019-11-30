@@ -4,7 +4,6 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.dubbo.rpc.RpcContext;
 import com.stylefeng.guns.api.film.FilmService;
 import com.stylefeng.guns.api.film.vo.*;
-import com.stylefeng.guns.rest.modular.vo.ResponseVO;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -99,7 +98,7 @@ public class FilmController {
     }
 
     @RequestMapping(value = "getFilms",method = RequestMethod.GET)
-    public ResponseVo gitFilms(@RequestBody RequestFilmsVo requestFilmsVo){
+    public ResponseVo gitFilms(RequestFilmsVo requestFilmsVo){
 
         GetFilmVo getFilmVo = null;
         if (requestFilmsVo.getShowType() == 1){
@@ -136,7 +135,7 @@ public class FilmController {
         return ResponseVo.success(img_pre,getFilmVo.getNowPage(),getFilmVo.getTotalPage(),getFilmVo.getGetFilmInfoList());
     }
 
-    @RequestMapping(value = "films{searchFilm}",method = RequestMethod.GET)
+    @RequestMapping(value = "films/{searchFilm}",method = RequestMethod.GET)
     public ResponseVo films(@PathVariable("searchFilm")String searchFilm,
                             int searchType) throws ExecutionException, InterruptedException {
         //searchType : ‘0表示按照编号查找，1表示按照名称查找'
