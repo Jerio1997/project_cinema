@@ -46,7 +46,7 @@ public class FilmController {
             filmIndexVO.setHotFilms(hotFilms);
             filmIndexVO.setSoonFilms(soonFilms);
             filmIndexVO.setBoxRanking(boxRanking);
-            filmIndexVO.setExceptRanking(expectRanking);
+            filmIndexVO.setExpectRanking(expectRanking);
             filmIndexVO.setTop100(top);
 
         } catch (Exception e) {
@@ -57,6 +57,7 @@ public class FilmController {
         filmRespVO.setData(filmIndexVO);
         filmRespVO.setStatus(0);
         filmRespVO.setImgPre("http://img.meetingshop.cn/");
+        filmRespVO.setTotalPage("");
 
         return filmRespVO;
     }
