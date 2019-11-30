@@ -90,17 +90,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserInfo getUserById(Integer uuid) {
-        UserInfo user;
         Map<String,Object> map = new HashMap<>();
         map.put("uuid",uuid);
+        UserInfo user = new UserInfo();
         List<MtimeUserT> mtimeUserTList = userTMapper.selectByMap(map);
         if(mtimeUserTList.size() == 1){
             MtimeUserT mtimeUserT = mtimeUserTList.get(0);
-            user = transfer(mtimeUserT);
+             user = transfer(mtimeUserT);
             user.setUuid(uuid);
-            return user;
         }
-        return null;
+        return user;
     }
 
     private UserInfo transfer(MtimeUserT mtimeUserT) {
