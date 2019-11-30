@@ -79,7 +79,8 @@ public class UserServiceImpl implements UserService {
     public int judgeAndGetUUid(String username, String password) {
         Map<String,Object> map = new HashMap<>();
         map.put("user_name",username);
-        map.put("user_pwd",password);
+        String newPassword = MD5Util.encrypt(password);
+        map.put("user_pwd",newPassword);
         List<MtimeUserT> mtimeUserTList = userTMapper.selectByMap(map);
         if (mtimeUserTList.size() == 1) {
             return mtimeUserTList.get(0).getUuid();
