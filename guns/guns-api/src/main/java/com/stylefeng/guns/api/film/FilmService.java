@@ -23,6 +23,22 @@ public interface FilmService {
 
     List<FilmInfo> getTop(Integer count);
 
+    GetFilmVo getHotFilm(boolean b, Integer pageSize, Integer nowPage, Integer sortId, Integer sourceId, Integer yearId, Integer catId);
+
+    GetFilmVo getSoonFilm(boolean b, Integer pageSize, Integer nowPage, Integer sortId, Integer sourceId, Integer yearId, Integer catId);
+
+    GetFilmVo getClassicFilm(boolean b, Integer pageSize, Integer nowPage, Integer sortId, Integer sourceId, Integer yearId, Integer catId);
+
+    FilmDetailVo getFilmDetail(int searchType, String searchFilm);
+
+    FilmDescVO getFilmDesc(String filmId);
+
+    ImgVO getImgs(String filmId);
+
+    ActorVO getDectInfo(String filmId);
+
+    List<ActorVO> getActors(String filmId);
+
     List<CatVO> getCats(String catId);
 
     List<SourceVO> getSource(String sourceId);

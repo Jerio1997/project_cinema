@@ -6,6 +6,7 @@ import com.stylefeng.guns.api.user.vo.User;
 import com.stylefeng.guns.api.user.vo.UserInfo;
 import com.stylefeng.guns.api.user.vo.UserLoginResVO;
 import com.stylefeng.guns.core.exception.GunsException;
+import com.stylefeng.guns.core.util.MD5Util;
 import com.stylefeng.guns.rest.common.exception.BizExceptionEnum;
 import com.stylefeng.guns.rest.modular.auth.controller.dto.AuthRequest;
 import com.stylefeng.guns.rest.modular.auth.controller.dto.AuthResponse;
@@ -13,6 +14,7 @@ import com.stylefeng.guns.rest.modular.auth.util.JwtTokenUtil;
 import com.stylefeng.guns.rest.modular.auth.validator.IReqValidator;
 import com.stylefeng.guns.rest.modular.vo.ResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,15 +41,17 @@ public class AuthController {
     @Autowired
     private RedisTemplate redisTemplate;
 
-    @Reference
+    @Reference(interfaceClass = UserService.class, check = false)
     private UserService userService;
 
-//    @RequestMapping(value = "${jwt.auth-path}")
-    @RequestMapping(value = "auth")
+
+//    @RequestMapping(value = "auth")
+    @RequestMapping(value = "${jwt.auth-path}")
     public ResponseVO createAuthenticationToken(AuthRequest authRequest) {
         UserLoginResVO userLoginResVO = new UserLoginResVO();
         //把用户信息返回过来
-        User user = userService.getUserByUsername(authRequest.getUserName());
+        String username = authRequest.getUserName();
+        UserInfo user = userService.getUserByUsername(username);
         if(user == null){
             return ResponseVO.serviceFail("用户名或密码错误");
         }
@@ -56,7 +60,7 @@ public class AuthController {
         if (validate) {
             final String randomKey = jwtTokenUtil.getRandomKey();
             final String token = jwtTokenUtil.generateToken(authRequest.getUserName(), randomKey);
-            redisTemplate.opsForValue().set(token,user);
+            redisTemplate.opsForValue().set(token,user.getUuid());
             redisTemplate.expire(token,300, TimeUnit.SECONDS);
             userLoginResVO.setRandomKey(randomKey);
             userLoginResVO.setToken(token);
@@ -66,11 +70,11 @@ public class AuthController {
         }
     }
 
-    private boolean judge(User user, AuthRequest authRequest) {
+    private boolean judge(UserInfo user, AuthRequest authRequest) {
         String USER_NAME = user.getUsername();
         String PASSWORD = user.getPassword();
         String userName = authRequest.getUserName();
-        String password = authRequest.getPassword();
+        String password = MD5Util.encrypt(authRequest.getPassword());
         if (USER_NAME.equals(userName) && PASSWORD.equals(password)) {
             return true;
         } else {

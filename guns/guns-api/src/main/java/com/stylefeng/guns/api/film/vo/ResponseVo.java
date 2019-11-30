@@ -25,6 +25,15 @@ public class ResponseVo<T> {
         return responseVo;
     }
 
+    public static<T> ResponseVo success(String imgPre,T t){
+        ResponseVo responseVO = new ResponseVo();
+        responseVO.setStatus(0);
+        responseVO.setData(t);
+        responseVO.setImgPre(imgPre);
+
+        return responseVO;
+    }
+
     public static<T> ResponseVo serviceException(String msg){
         ResponseVo responseVo = new ResponseVo();
         responseVo.setStatus(1);

@@ -1,7 +1,9 @@
+/*
 package com.stylefeng.guns.rest.modular.film;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.stylefeng.guns.api.film.GetFilmsAndFilmsService;
+import com.stylefeng.guns.api.film.vo.FilmDetailVo;
 import com.stylefeng.guns.api.film.vo.GetFilmVo;
 import com.stylefeng.guns.api.film.vo.RequestFilmsVo;
 import com.stylefeng.guns.api.film.vo.ResponseVo;
@@ -57,7 +59,9 @@ public class GetFilmsAndFilmsController {
                             int searchType){
         //searchType : ‘0表示按照编号查找，1表示按照名称查找'
 
+        FilmDetailVo filmDetailVo =
         return null;
     }
 }
+*/
 

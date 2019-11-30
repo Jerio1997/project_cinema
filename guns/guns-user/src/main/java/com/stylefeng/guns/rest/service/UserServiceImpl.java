@@ -71,21 +71,34 @@ public class UserServiceImpl implements UserService {
         MtimeUserT mtimeUserT = userTMapper.selectById(uuid);
         UserInfo userInfo = new UserInfo();
         userInfo.setUuid(uuid);
+        userInfo.setUsername(mtimeUserT.getUserName());
         userInfo.setNickname(mtimeUserT.getNickName());
-        // TODO
+        userInfo.setEmail(mtimeUserT.getEmail());
+        userInfo.setPhone(mtimeUserT.getUserPhone());
+        userInfo.setSex(mtimeUserT.getUserSex());
+        userInfo.setBirthday(mtimeUserT.getBirthday());
+        userInfo.setLifeState(""+mtimeUserT.getLifeState());
+        userInfo.setBiography(mtimeUserT.getBiography());
+        userInfo.setAddress(mtimeUserT.getAddress());
+        userInfo.setHeadAddress(mtimeUserT.getHeadUrl());
+        userInfo.setBeginTime(mtimeUserT.getBeginTime().getTime());
+        userInfo.setUpdateTime(mtimeUserT.getUpdateTime().getTime());
+
         return userInfo;
     }
 
     @Override
-    public User getUserByUsername(String userName) {
-        User user = new User();
+    public UserInfo getUserByUsername(String userName) {
+        UserInfo user = new UserInfo();
         user.setUsername(userName);
         Map<String,Object> map = new HashMap<>();
         map.put("user_name",userName);
         List<MtimeUserT> mtimeUserTList = userTMapper.selectByMap(map);
         if (mtimeUserTList.size() == 1) {
-            String password = MD5Util.encrypt(mtimeUserTList.get(0).getUserPwd());
-            user.setPassword(password);
+//            String password = MD5Util.encrypt(mtimeUserTList.get(0).getUserPwd());//123456
+//            user.setPassword(password);
+            user.setUuid(mtimeUserTList.get(0).getUuid());
+            user.setPassword(mtimeUserTList.get(0).getUserPwd());
             return user;
         }
         return null;
