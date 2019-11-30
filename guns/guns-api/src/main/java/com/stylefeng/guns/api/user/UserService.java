@@ -14,4 +14,6 @@ public interface UserService {
     UserInfo queryUserById(Integer uuid);
 
     UserInfo getUserByUsername(String userName);
+
+    UserInfo getUserById(Integer uuid);
 }

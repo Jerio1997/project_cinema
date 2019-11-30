@@ -88,7 +88,8 @@ public class UserController {
         String requestHeader = request.getHeader(jwtProperties.getHeader());
         if (requestHeader != null && requestHeader.startsWith("Bearer ")){
             String token = requestHeader.substring(7);
-            UserInfo user = (UserInfo) redisTemplate.opsForValue().get(token);
+            Integer uuid = (Integer) redisTemplate.opsForValue().get(token);
+            UserInfo user = userService.getUserById(uuid);
             return ResponseVO.success(user);
         }
         return ResponseVO.serviceFail("退出失败，用户尚未登陆");

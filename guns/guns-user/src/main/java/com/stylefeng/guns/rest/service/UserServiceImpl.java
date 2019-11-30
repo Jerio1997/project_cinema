@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
         userT.setUserPhone(userInfo.getPhone());
         userT.setAddress(userInfo.getAddress());
         userT.setBiography(userInfo.getBiography());
-        userT.setLifeState(Integer.parseInt(userInfo.getLifeState()));
+        userT.setLifeState(userInfo.getLifeState());
         userT.setUpdateTime(new Date());
         Integer integer = userTMapper.updateById(userT);
         return integer != 0;
@@ -88,6 +88,32 @@ public class UserServiceImpl implements UserService {
 //            user.setPassword(password);
             user.setUuid(mtimeUserTList.get(0).getUuid());
             user.setPassword(mtimeUserTList.get(0).getUserPwd());
+            return user;
+        }
+        return null;
+    }
+
+    @Override
+    public UserInfo getUserById(Integer uuid) {
+        UserInfo user = new UserInfo();
+        Map<String,Object> map = new HashMap<>();
+        map.put("uuid",uuid);
+        List<MtimeUserT> mtimeUserTList = userTMapper.selectByMap(map);
+        if(mtimeUserTList.size() == 1){
+            MtimeUserT mtimeUserT = mtimeUserTList.get(0);
+            user.setUuid(uuid);
+            user.setUsername(mtimeUserT.getUserName());
+            user.setNickname(mtimeUserT.getNickName());
+            user.setEmail(mtimeUserT.getEmail());
+            user.setPhone(mtimeUserT.getUserPhone());
+            user.setSex(mtimeUserT.getUserSex());
+            user.setBirthday(mtimeUserT.getBirthday());
+            user.setLifeState(mtimeUserT.getLifeState());
+            user.setBiography(mtimeUserT.getBiography());
+            user.setAddress(mtimeUserT.getAddress());
+            user.setHeadAddress(mtimeUserT.getAddress());
+            user.setCreateTime(mtimeUserT.getBeginTime());
+            user.setUpdateTime(mtimeUserT.getUpdateTime());
             return user;
         }
         return null;

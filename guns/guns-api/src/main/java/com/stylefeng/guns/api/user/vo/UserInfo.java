@@ -3,6 +3,7 @@ package com.stylefeng.guns.api.user.vo;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Data
 public class UserInfo implements Serializable {
@@ -14,11 +15,11 @@ public class UserInfo implements Serializable {
     private String phone;
     private int sex;
     private String birthday;
-    private String lifeState;
+    private Integer lifeState;
     private String biography;
     private String address;
     private String headAddress;
-    private long beginTime;
-    private long updateTime;
+    private Date createTime;
+    private Date updateTime;
 
 }
