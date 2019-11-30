@@ -60,8 +60,9 @@ public class FilmServiceImpl implements FilmService {
         if(CollectionUtils.isEmpty(mtimeBannerTs)){
             return banners;
         }
-        BannerVO banner = new BannerVO();
+
         for (MtimeBannerT mtimeBannerT : mtimeBannerTs) {
+            BannerVO banner = new BannerVO();
             banner.setBannerId(mtimeBannerT.getUuid().toString());
             banner.setBannerAddress(mtimeBannerT.getBannerAddress());
             banner.setBannerUrl(mtimeBannerT.getBannerUrl());
@@ -95,8 +96,9 @@ public class FilmServiceImpl implements FilmService {
         if(CollectionUtils.isEmpty(mtimeFilmTS)){
             return filmInfos;
         }
-        FilmInfo filmInfo = new FilmInfo();
+
         for (MtimeFilmT mtimeFilmT : mtimeFilmTS) {
+            FilmInfo filmInfo = new FilmInfo();
             filmInfo.setFilmId(mtimeFilmT.getUuid().toString());
             filmInfo.setFilmName(mtimeFilmT.getFilmName());
             filmInfo.setImgAddress(mtimeFilmT.getImgAddress());
@@ -131,8 +133,9 @@ public class FilmServiceImpl implements FilmService {
         if(CollectionUtils.isEmpty(mtimeFilmTS)){
             return filmInfos;
         }
-        FilmInfo filmInfo = new FilmInfo();
+
         for (MtimeFilmT mtimeFilmT : mtimeFilmTS) {
+            FilmInfo filmInfo = new FilmInfo();
             filmInfo.setFilmId(mtimeFilmT.getUuid().toString());
             filmInfo.setFilmName(mtimeFilmT.getFilmName());
             filmInfo.setImgAddress(mtimeFilmT.getImgAddress());
@@ -160,8 +163,9 @@ public class FilmServiceImpl implements FilmService {
         if(CollectionUtils.isEmpty(mtimeFilmTS)){
             return filmInfos;
         }
-        FilmInfo filmInfo = new FilmInfo();
+
         for (MtimeFilmT mtimeFilmT : mtimeFilmTS) {
+            FilmInfo filmInfo = new FilmInfo();
             filmInfo.setFilmId(mtimeFilmT.getUuid().toString());
             filmInfo.setFilmName(mtimeFilmT.getFilmName());
             filmInfo.setImgAddress(mtimeFilmT.getImgAddress());
@@ -186,8 +190,9 @@ public class FilmServiceImpl implements FilmService {
         if(CollectionUtils.isEmpty(mtimeFilmTS)){
             return filmInfos;
         }
-        FilmInfo filmInfo = new FilmInfo();
+
         for (MtimeFilmT mtimeFilmT : mtimeFilmTS) {
+            FilmInfo filmInfo = new FilmInfo();
             filmInfo.setFilmId(mtimeFilmT.getUuid().toString());
             filmInfo.setFilmName(mtimeFilmT.getFilmName());
             filmInfo.setImgAddress(mtimeFilmT.getImgAddress());
@@ -211,8 +216,9 @@ public class FilmServiceImpl implements FilmService {
         if(CollectionUtils.isEmpty(mtimeFilmTS)){
             return filmInfos;
         }
-        FilmInfo filmInfo = new FilmInfo();
+
         for (MtimeFilmT mtimeFilmT : mtimeFilmTS) {
+            FilmInfo filmInfo = new FilmInfo();
             filmInfo.setFilmId(mtimeFilmT.getUuid().toString());
             filmInfo.setFilmName(mtimeFilmT.getFilmName());
             filmInfo.setImgAddress(mtimeFilmT.getImgAddress());
