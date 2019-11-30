@@ -71,8 +71,19 @@ public class UserServiceImpl implements UserService {
         MtimeUserT mtimeUserT = userTMapper.selectById(uuid);
         UserInfo userInfo = new UserInfo();
         userInfo.setUuid(uuid);
+        userInfo.setUsername(mtimeUserT.getUserName());
         userInfo.setNickname(mtimeUserT.getNickName());
-        // TODO
+        userInfo.setEmail(mtimeUserT.getEmail());
+        userInfo.setPhone(mtimeUserT.getUserPhone());
+        userInfo.setSex(mtimeUserT.getUserSex());
+        userInfo.setBirthday(mtimeUserT.getBirthday());
+        userInfo.setLifeState(""+mtimeUserT.getLifeState());
+        userInfo.setBiography(mtimeUserT.getBiography());
+        userInfo.setAddress(mtimeUserT.getAddress());
+        userInfo.setHeadAddress(mtimeUserT.getHeadUrl());
+        userInfo.setBeginTime(mtimeUserT.getBeginTime().getTime());
+        userInfo.setUpdateTime(mtimeUserT.getUpdateTime().getTime());
+
         return userInfo;
     }
 
