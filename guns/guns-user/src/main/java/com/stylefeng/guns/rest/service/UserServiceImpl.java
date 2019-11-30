@@ -81,8 +81,8 @@ public class UserServiceImpl implements UserService {
         userInfo.setBiography(mtimeUserT.getBiography());
         userInfo.setAddress(mtimeUserT.getAddress());
         userInfo.setHeadAddress(mtimeUserT.getHeadUrl());
-//        userInfo.setCreateTime(mtimeUserT.getBeginTime().getTime());
-//        userInfo.setUpdateTime(mtimeUserT.getUpdateTime().getTime());
+        userInfo.setCreateTime(mtimeUserT.getBeginTime().getTime());
+        userInfo.setUpdateTime(mtimeUserT.getUpdateTime().getTime());
 
         return userInfo;
     }
@@ -137,8 +137,8 @@ public class UserServiceImpl implements UserService {
             user.setBiography(mtimeUserT.getBiography());
             user.setAddress(mtimeUserT.getAddress());
             user.setHeadAddress(mtimeUserT.getAddress());
-            user.setCreateTime(mtimeUserT.getBeginTime());
-            user.setUpdateTime(mtimeUserT.getUpdateTime());
+            user.setCreateTime(mtimeUserT.getBeginTime().getTime());
+            user.setUpdateTime(mtimeUserT.getUpdateTime().getTime());
             return user;
         }
         return null;

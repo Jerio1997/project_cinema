@@ -18,7 +18,7 @@ public class UserInfo implements Serializable {
     private String biography;
     private String address;
     private String headAddress;
-    private Date createTime;
-    private Date updateTime;
+    private long createTime;
+    private long updateTime;
 
 }
