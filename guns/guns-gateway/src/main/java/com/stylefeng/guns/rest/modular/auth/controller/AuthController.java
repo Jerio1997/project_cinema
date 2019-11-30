@@ -50,17 +50,21 @@ public class AuthController {
     public ResponseVO createAuthenticationToken(AuthRequest authRequest) {
         UserLoginResVO userLoginResVO = new UserLoginResVO();
         //把用户信息返回过来
-        String username = authRequest.getUserName();
+        /*String username = authRequest.getUserName();
         UserInfo user = userService.getUserByUsername(username);
         if(user == null){
             return ResponseVO.serviceFail("用户名或密码错误");
         }
         //校验用户名和密码
-        boolean validate = judge(user,authRequest);
-        if (validate) {
+        boolean validate = judge(user,authRequest);*/
+        String username = authRequest.getUserName();
+        String password = authRequest.getPassword();
+        int uuid = userService.judgeAndGetUUid(username,password);
+
+        if (uuid != -1) {
             final String randomKey = jwtTokenUtil.getRandomKey();
             final String token = jwtTokenUtil.generateToken(authRequest.getUserName(), randomKey);
-            redisTemplate.opsForValue().set(token,user.getUuid());
+            redisTemplate.opsForValue().set(token,uuid);
             redisTemplate.expire(token,300, TimeUnit.SECONDS);
             userLoginResVO.setRandomKey(randomKey);
             userLoginResVO.setToken(token);
@@ -70,15 +74,5 @@ public class AuthController {
         }
     }
 
-    private boolean judge(UserInfo user, AuthRequest authRequest) {
-        String USER_NAME = user.getUsername();
-        String PASSWORD = user.getPassword();
-        String userName = authRequest.getUserName();
-        String password = MD5Util.encrypt(authRequest.getPassword());
-        if (USER_NAME.equals(userName) && PASSWORD.equals(password)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+
 }

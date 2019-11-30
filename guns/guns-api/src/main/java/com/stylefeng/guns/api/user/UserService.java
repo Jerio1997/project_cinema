@@ -13,7 +13,7 @@ public interface UserService {
 
     UserInfo queryUserById(Integer uuid);
 
-    UserInfo getUserByUsername(String userName);
+    int judgeAndGetUUid(String username, String password);
 
     UserInfo getUserById(Integer uuid);
 }

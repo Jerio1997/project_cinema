@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
         return userInfo;
     }
 
-    @Override
+    /*@Override
     public UserInfo getUserByUsername(String userName) {
         UserInfo user = new UserInfo();
         user.setUsername(userName);
@@ -102,6 +102,20 @@ public class UserServiceImpl implements UserService {
             return user;
         }
         return null;
+    }*/
+
+
+
+    @Override
+    public int judgeAndGetUUid(String username, String password) {
+        Map<String,Object> map = new HashMap<>();
+        map.put("user_name",username);
+        map.put("user_pwd",password);
+        List<MtimeUserT> mtimeUserTList = userTMapper.selectByMap(map);
+        if (mtimeUserTList.size() == 1) {
+            return mtimeUserTList.get(0).getUuid();
+        }
+        return -1;
     }
 
     @Override

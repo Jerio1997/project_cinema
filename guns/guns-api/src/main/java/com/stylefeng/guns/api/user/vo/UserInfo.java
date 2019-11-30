@@ -9,7 +9,6 @@ import java.util.Date;
 public class UserInfo implements Serializable {
     private Integer uuid;
     private String username;
-    private String password;
     private String nickname;
     private String email;
     private String phone;
