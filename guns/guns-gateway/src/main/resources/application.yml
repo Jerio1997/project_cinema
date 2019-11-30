@@ -31,12 +31,17 @@ spring:
   application:
     name: gun-gateway
   dubbo:
+#    registry: zookeeper://192.168.3.107:2181
     registry: zookeeper://localhost:2181
   datasource:
       url: jdbc:mysql://127.0.0.1:3306/guns_rest?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
       username: root
       password: 123456
       filters: log4j,wall,mergeStat
+  redis:
+    host: localhost
+    port: 6379
+#    host: 192.168.3.107
 
 logging:
   level.root: info
