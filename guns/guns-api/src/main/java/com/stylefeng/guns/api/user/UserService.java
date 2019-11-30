@@ -13,5 +13,5 @@ public interface UserService {
 
     UserInfo queryUserById(Integer uuid);
 
-    User getUserByUsername(String userName);
+    UserInfo getUserByUsername(String userName);
 }
