@@ -69,41 +69,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserInfo queryUserById(Integer uuid) {
         MtimeUserT mtimeUserT = userTMapper.selectById(uuid);
-        UserInfo userInfo = new UserInfo();
+        UserInfo userInfo = transfer(mtimeUserT);
         userInfo.setUuid(uuid);
-        userInfo.setUsername(mtimeUserT.getUserName());
-        userInfo.setNickname(mtimeUserT.getNickName());
-        userInfo.setEmail(mtimeUserT.getEmail());
-        userInfo.setPhone(mtimeUserT.getUserPhone());
-        userInfo.setSex(mtimeUserT.getUserSex());
-        userInfo.setBirthday(mtimeUserT.getBirthday());
-//        userInfo.setLifeState(""+mtimeUserT.getLifeState());
-        userInfo.setBiography(mtimeUserT.getBiography());
-        userInfo.setAddress(mtimeUserT.getAddress());
-        userInfo.setHeadAddress(mtimeUserT.getHeadUrl());
-        userInfo.setCreateTime(mtimeUserT.getBeginTime().getTime());
-        userInfo.setUpdateTime(mtimeUserT.getUpdateTime().getTime());
-
         return userInfo;
     }
-
-    /*@Override
-    public UserInfo getUserByUsername(String userName) {
-        UserInfo user = new UserInfo();
-        user.setUsername(userName);
-        Map<String,Object> map = new HashMap<>();
-        map.put("user_name",userName);
-        List<MtimeUserT> mtimeUserTList = userTMapper.selectByMap(map);
-        if (mtimeUserTList.size() == 1) {
-//            String password = MD5Util.encrypt(mtimeUserTList.get(0).getUserPwd());//123456
-//            user.setPassword(password);
-            user.setUuid(mtimeUserTList.get(0).getUuid());
-            user.setPassword(mtimeUserTList.get(0).getUserPwd());
-            return user;
-        }
-        return null;
-    }*/
-
 
 
     @Override
@@ -120,27 +89,34 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserInfo getUserById(Integer uuid) {
-        UserInfo user = new UserInfo();
+        UserInfo user;
         Map<String,Object> map = new HashMap<>();
         map.put("uuid",uuid);
         List<MtimeUserT> mtimeUserTList = userTMapper.selectByMap(map);
         if(mtimeUserTList.size() == 1){
             MtimeUserT mtimeUserT = mtimeUserTList.get(0);
+            user = transfer(mtimeUserT);
             user.setUuid(uuid);
-            user.setUsername(mtimeUserT.getUserName());
-            user.setNickname(mtimeUserT.getNickName());
-            user.setEmail(mtimeUserT.getEmail());
-            user.setPhone(mtimeUserT.getUserPhone());
-            user.setSex(mtimeUserT.getUserSex());
-            user.setBirthday(mtimeUserT.getBirthday());
-            user.setLifeState(mtimeUserT.getLifeState());
-            user.setBiography(mtimeUserT.getBiography());
-            user.setAddress(mtimeUserT.getAddress());
-            user.setHeadAddress(mtimeUserT.getAddress());
-            user.setCreateTime(mtimeUserT.getBeginTime().getTime());
-            user.setUpdateTime(mtimeUserT.getUpdateTime().getTime());
             return user;
         }
         return null;
     }
+
+    private UserInfo transfer(MtimeUserT mtimeUserT) {
+        UserInfo user = new UserInfo();
+        user.setUsername(mtimeUserT.getUserName());
+        user.setNickname(mtimeUserT.getNickName());
+        user.setEmail(mtimeUserT.getEmail());
+        user.setPhone(mtimeUserT.getUserPhone());
+        user.setSex(mtimeUserT.getUserSex());
+        user.setBirthday(mtimeUserT.getBirthday());
+        user.setLifeState(mtimeUserT.getLifeState());
+        user.setBiography(mtimeUserT.getBiography());
+        user.setAddress(mtimeUserT.getAddress());
+        user.setHeadAddress(mtimeUserT.getAddress());
+        user.setCreateTime(mtimeUserT.getBeginTime().getTime());
+        user.setUpdateTime(mtimeUserT.getUpdateTime().getTime());
+        return user;
+    }
+
 }
