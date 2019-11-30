@@ -15,7 +15,7 @@ import com.stylefeng.guns.api.film.vo.FilmDetailVo;
  */
 public interface MtimeFilmTMapper extends BaseMapper<MtimeFilmT> {
 
-    FilmDetailVo getFilmDetailByName(@Param("filmName") String filmName);
+    FilmDetailVo getFilmDetailByName(/*@Param("filmName")*/ String filmName);
 
-    FilmDetailVo getFilmDetailById(@Param("uuid") String uuid);
+    FilmDetailVo getFilmDetailById(/*@Param("uuid")*/ String uuid);
 }

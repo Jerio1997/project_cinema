@@ -1,6 +1,7 @@
 package com.stylefeng.guns.rest.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
+import com.alibaba.dubbo.config.support.Parameter;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.api.film.vo.*;
@@ -11,6 +12,7 @@ import com.stylefeng.guns.rest.common.persistence.model.MtimeActorT;
 import com.stylefeng.guns.rest.common.persistence.model.MtimeBannerT;
 import com.stylefeng.guns.rest.common.persistence.model.MtimeFilmInfoT;
 import com.stylefeng.guns.rest.common.persistence.model.MtimeFilmT;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -410,7 +412,7 @@ public class FilmServiceImpl implements FilmService {
     public FilmDetailVo getFilmDetail(int searchType, String searchFilm) {
         FilmDetailVo filmDetailVo = null;
         //searchType : ‘0表示按照编号查找，1表示按照名称查找’
-        if (searchType ==1){
+        if (searchType == 1){
             filmDetailVo = mtimeFilmTMapper.getFilmDetailByName("%"+searchFilm+"%");
         }else {
             filmDetailVo = mtimeFilmTMapper.getFilmDetailById(searchFilm);
