@@ -11,10 +11,6 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-/**
- * Author Jerio
- * CreateTime 2019/11/27 21:31
- **/
 @RestController
 @RequestMapping("film")
 public class FilmController {

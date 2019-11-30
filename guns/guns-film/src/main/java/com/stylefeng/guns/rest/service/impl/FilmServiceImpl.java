@@ -277,7 +277,7 @@ public class FilmServiceImpl implements FilmService {
             }
 
             //catId,sourceId,yearId不为默认(99),则根据对应的编号进行查询
-            if (sortId != 99){
+            if (sourceId != 99){
                 entityWrapper.eq("film_source",sourceId);
             }
             if (catId != 99){
