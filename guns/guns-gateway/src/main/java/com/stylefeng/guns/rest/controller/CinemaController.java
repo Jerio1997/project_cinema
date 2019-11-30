@@ -26,8 +26,8 @@ public class CinemaController {
     }
 
     @RequestMapping("getCinemas")
-    public BaseResVO<List> getCinemas(Integer brandId, Integer hallType, Integer areaId, Integer pageSize, Integer nowPage) {
-        BaseResVO cinemas = cinemaService.getCinemas(brandId, hallType, areaId, pageSize, nowPage);
+    public BaseResVO<List> getCinemas(Integer brandId, Integer halltypeId, Integer areaId, Integer pageSize, Integer nowPage) {
+        BaseResVO cinemas = cinemaService.getCinemas(brandId, halltypeId, areaId, pageSize, nowPage);
         return cinemas;
     }
     @RequestMapping("getFields")

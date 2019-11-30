@@ -107,12 +107,12 @@ public class CinemaServiceImpl implements CinemaService {
     }
 
     @Override
-    public BaseResVO getCinemas(Integer brandId, Integer hallType, Integer areaId, Integer pageSize, Integer nowPage) {
+    public BaseResVO getCinemas(Integer brandId, Integer halltypeId, Integer areaId, Integer pageSize, Integer nowPage) {
         if (brandId == null) {
             brandId = 99;
         }
-        if (hallType == null) {
-            hallType = 99;
+        if (halltypeId == null) {
+            halltypeId = 99;
         }
         if (areaId == null) {
             areaId = 99;
@@ -133,8 +133,8 @@ public class CinemaServiceImpl implements CinemaService {
             cinematWrapper.eq("area_id", areaId);
         }
 
-        if (hallType != 99) {
-            cinematWrapper.like("hall_ids", "#"+hallType+"#");
+        if (halltypeId != 99) {
+            cinematWrapper.like("hall_ids", "#"+halltypeId+"#");
         }
 
 //        Page<MtimeCinemaT> page = new Page<>(nowPage, pageSize);

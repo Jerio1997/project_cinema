@@ -44,7 +44,8 @@ dubbo:
   registry:
     protocol: zookeeper
     address: localhost:2181
+  #    address: 192.168.3.107:2181
   protocol:
     name: dubbo
-    port: 20880
+    port: 20882
 

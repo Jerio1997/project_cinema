@@ -18,4 +18,6 @@ public class FilmRespVO implements Serializable {
     private Object data;
 
     private String msg;
+
+    private String totalPage;
 }

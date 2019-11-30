@@ -8,10 +8,14 @@ jwt:
   expiration: 604800      #7天 单位:秒
   auth-path: auth         #认证请求的路径
   md5-key: randomKey      #md5加密混淆key
+<<<<<<< HEAD
   ignore-url: /auth,/film/index
+=======
+  ignore-url: /auth,/film
+>>>>>>> ec012102414198cafa2e9af978f9f6f3598ea81d
 
 server:
-  port: 8083 #项目端口
+  port: 8080 #项目端口
 
 mybatis-plus:
   mapper-locations: classpath*:com/stylefeng/guns/rest/**/mapping/*.xml
@@ -31,12 +35,17 @@ spring:
   application:
     name: gun-gateway
   dubbo:
+#    registry: zookeeper://192.168.3.107:2181
     registry: zookeeper://localhost:2181
   datasource:
       url: jdbc:mysql://127.0.0.1:3306/guns_rest?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
       username: root
       password: 123456
       filters: log4j,wall,mergeStat
+  redis:
+    host: localhost
+    port: 6379
+#    host: 192.168.3.107
 
 logging:
   level.root: info
