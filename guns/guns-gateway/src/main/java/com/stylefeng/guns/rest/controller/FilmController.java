@@ -2,6 +2,7 @@ package com.stylefeng.guns.rest.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.dubbo.rpc.RpcContext;
+import com.stylefeng.guns.api.film.AsyncFilmsService;
 import com.stylefeng.guns.api.film.FilmService;
 import com.stylefeng.guns.api.film.vo.*;
 import org.springframework.util.CollectionUtils;
@@ -17,6 +18,9 @@ public class FilmController {
 
     @Reference(interfaceClass = FilmService.class,check = false)
     private FilmService filmService;
+
+    @Reference(interfaceClass = AsyncFilmsService.class,async = true,check = false)
+    private AsyncFilmsService asyncFilmsService;
 
     @RequestMapping("getIndex")
     public FilmRespVO getIndex(){
@@ -141,20 +145,21 @@ public class FilmController {
 
         if (filmDetailVo == null){
             return ResponseVo.serviceException("查询失败，无影片可加载");
-        }else if (filmDetailVo.getFilmId()==null){
+        }else if (filmDetailVo.getFilmId()==null || filmDetailVo.getFilmId().trim().length() == 0){
             return ResponseVo.serviceException("查询失败，无影片可加载");
         }
        String filmId = filmDetailVo.getFilmId();
-        filmService.getFilmDesc(filmId);
+
+        asyncFilmsService.getFilmDesc(filmId);
         Future<FilmDescVO> filmDescVOFuture = RpcContext.getContext().getFuture();
         //图片信息
-        filmService.getImgs(filmId);
+        asyncFilmsService.getImgs(filmId);
         Future<ImgVO> imgVOFuture = RpcContext.getContext().getFuture();
         //导演信息
-        filmService.getDectInfo(filmId);
+        asyncFilmsService.getDectInfo(filmId);
         Future<ActorVO> actorVOFuture = RpcContext.getContext().getFuture();
         //演员信息
-        filmService.getActors(filmId);
+        asyncFilmsService.getActors(filmId);
         Future<List<ActorVO>> actors = RpcContext.getContext().getFuture();
 
         InfoRequstVO infoRequstVO = new InfoRequstVO();

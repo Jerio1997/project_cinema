@@ -466,11 +466,11 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public ActorVO getDectInfo(String filmId) {
-        MtimeFilmInfoT mtimeFilmInfoT = new MtimeFilmInfoT();
+        MtimeFilmInfoT mtimeFilmInfoT = getFilmInfo(filmId);
 
         Integer directorId = mtimeFilmInfoT.getDirectorId();
 
-        MtimeActorT mtimeActorT = mtimeActorTMapper.selectById(filmId);
+        MtimeActorT mtimeActorT = mtimeActorTMapper.selectById(directorId);
 
         ActorVO actorVO = new ActorVO();
         actorVO.setDirectorName(mtimeActorT.getActorName());
