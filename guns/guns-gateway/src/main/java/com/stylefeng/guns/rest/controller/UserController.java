@@ -90,6 +90,9 @@ public class UserController {
             String token = requestHeader.substring(7);
             Integer uuid = (Integer) redisTemplate.opsForValue().get(token);
             UserInfo user = userService.getUserById(uuid);
+            if(user == null){
+                return ResponseVO.appFail("系统出现异常");
+            }
             return ResponseVO.success(user);
         }
         return ResponseVO.serviceFail("退出失败，用户尚未登陆");
