@@ -83,7 +83,7 @@ public class UserController {
             return ResponseVO.success("用户退出成功");
         }
         //表示没登陆
-        return ResponseVO.serviceFail("退出失败，用户尚未登陆");
+        return ResponseVO.serviceFail("查询失败，用户尚未登陆");
 
         //
     }
