@@ -71,7 +71,6 @@ public class UserController {
 
     @GetMapping("logout")
     public ResponseVO logout(HttpServletRequest request){
-
         String requestHeader= request.getHeader(jwtProperties.getHeader());
         if (requestHeader != null && requestHeader.startsWith("Bearer ")){
             String token = requestHeader.substring(7);
