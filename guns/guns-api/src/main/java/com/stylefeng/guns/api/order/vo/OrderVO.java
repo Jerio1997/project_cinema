@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 @Data
 public class OrderVO implements Serializable {
-    private String orderId;
+    private Integer orderId;
     private String filmName;
     private String fieldTime;
     private String cinemaNme;

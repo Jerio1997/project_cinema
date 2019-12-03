@@ -16,5 +16,8 @@
         <result column="order_user" property="orderUser" />
         <result column="order_status" property="orderStatus" />
     </resultMap>
+    <select id="getLastId" resultType="int">
+        select uuid from mooc_order_t order by uuid desc limit 0,1
+    </select>
 
 </mapper>

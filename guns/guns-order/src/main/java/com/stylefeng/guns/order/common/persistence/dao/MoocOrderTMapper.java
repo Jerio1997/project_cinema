@@ -13,4 +13,6 @@ import com.stylefeng.guns.order.common.persistence.model.MoocOrderT;
  */
 public interface MoocOrderTMapper extends BaseMapper<MoocOrderT> {
 
+    int getLastId();
+
 }
