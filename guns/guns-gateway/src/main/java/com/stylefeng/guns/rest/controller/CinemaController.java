@@ -42,18 +42,10 @@ public class CinemaController {
         BaseResVO<GetFieldsDataResVO> fields = cinemaService.getFields(cinemaId);
         return fields;
     }
+
     @RequestMapping("getFieldInfo")
     public BaseResVO<GetFieldInfoDataResVO> getFieldInfo(Integer cinemaId,Integer fieldId){
-        try {
-            BaseResVO<GetFieldInfoDataResVO> fieldInfo = cinemaService.getFieldInfo(cinemaId, fieldId);
-
-            GetFieldInfoDataResVO abc = new GetFieldInfoDataResVO();
-            abc.setSoldSeats(orderService.getSoldSeatsByFieldId(fieldId));
-            return fieldInfo;
-        }catch (Exception e){
-            log.error("获取选座信息失败",e);
-            //return ResponseVO.serviceFail("获取选座信息失败");
-            return null;
-        }
+        BaseResVO<GetFieldInfoDataResVO> fieldInfo = cinemaService.getFieldInfo(cinemaId, fieldId);
+        return fieldInfo;
     }
 }

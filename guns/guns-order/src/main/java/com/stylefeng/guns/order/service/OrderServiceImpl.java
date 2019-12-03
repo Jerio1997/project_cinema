@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 @Slf4j
-@Service
+@Service(interfaceClass = OrderService.class)
 @Component
 public class OrderServiceImpl implements OrderService {
 
@@ -192,7 +192,6 @@ public class OrderServiceImpl implements OrderService {
                 EntityWrapper<MoocOrderT> entityWrapper = new EntityWrapper<>();
                 entityWrapper.eq("order_user",userId);
                 Integer all = orderMapper.selectCount(entityWrapper);
-
                 orderVo.setTotal(all);
                 orderVo.setRecords(orderVOList);
 
@@ -203,13 +202,26 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public String getSoldSeatsByFieldId(Integer fieldId) {
-       /* if(fieldId == null){
+        if(fieldId == null){
             log.error("查询已售座位错误，没有传入场次编号");
-            return "";
-        }else{*/
-            String soldSeatsByFieldId = orderMapper.getSoldSeatsByFieldId(fieldId);
-            return soldSeatsByFieldId;
-//        }
+            return null;
+        }else{
+            Map<String,Object> map = new HashMap<>();
+            map.put("field_id",fieldId);
+            map.put("order_status",1);
+            List<MoocOrderT> orderList = orderMapper.selectByMap(map);
+            StringBuffer result = new StringBuffer();
+            if(orderList.size() != 0){
+                for (MoocOrderT order : orderList) {
+                    result.append(",");
+                    result.append(order.getSeatsIds());
+                }
+                return result.substring(1);
+            }else{
+                return null;
+            }
+
+        }
     }
 
     /*@Override
