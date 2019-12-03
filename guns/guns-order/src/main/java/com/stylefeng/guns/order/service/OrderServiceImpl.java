@@ -1,8 +1,8 @@
 package com.stylefeng.guns.order.service;
 
 import com.alibaba.dubbo.config.annotation.Service;
+//<<<<<<< HEAD
 import com.alibaba.fastjson.JSONObject;
-import com.stylefeng.guns.api.film.vo.FilmInfo;
 import com.stylefeng.guns.api.order.OrderService;
 import com.stylefeng.guns.api.order.vo.OrderVO;
 import com.stylefeng.guns.order.common.persistence.dao.*;
@@ -10,12 +10,24 @@ import com.stylefeng.guns.order.common.persistence.model.*;
 import com.stylefeng.guns.order.util.ConnectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+//=======
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
+import com.stylefeng.guns.order.common.persistence.dao.MoocOrderTMapper;
+import com.stylefeng.guns.order.common.persistence.model.MoocOrderT;
+import lombok.extern.slf4j.Slf4j;
+import com.stylefeng.guns.order.common.persistence.dao.MtimeFieldTMapper;
+import com.stylefeng.guns.order.common.persistence.dao.MtimeHallDictTMapper;
+import com.stylefeng.guns.order.common.persistence.model.MtimeFieldT;
+import com.stylefeng.guns.order.common.persistence.model.MtimeHallDictT;
 
+import java.util.ArrayList;
+import java.util.List;
+//>>>>>>> e04884673511772ca50074ed25778f4fb1cca611
+import java.util.HashMap;
+import java.util.Map;
+@Slf4j
 @Service
 @Component
 public class OrderServiceImpl implements OrderService {
@@ -127,7 +139,7 @@ public class OrderServiceImpl implements OrderService {
         //orderId怎么生成/获得？
         MtimeFieldT field = fieldTMapper.selectById(fieldId);
         MtimeCinemaT cinema = cinemaTMapper.selectById(field.getCinemaId());
-        orderVO.setCinemaNme(cinema.getCinemaName());
+        orderVO.setCinemaName(cinema.getCinemaName());
         orderVO.setFieldTime(field.getBeginTime());
         MtimeFilmT film = filmTMapper.selectById(field.getFilmId());
         orderVO.setFilmName(film.getFilmName());
@@ -163,4 +175,64 @@ public class OrderServiceImpl implements OrderService {
         orderVO.setOrderId(lastId);
         return orderVO;
     }
+
+    @Override
+    public Page<OrderVO> getOrderByUserId(Integer userId, Page<OrderVO> page) {
+        Page<OrderVO> orderVo = new Page<>();
+        if (userId == null){
+            return null;
+        }else {
+            List<OrderVO> orderVOList = orderMapper.getOrdersByUserId(userId,page);
+
+            if (orderVOList == null && orderVOList.size() == 0){
+                orderVo.setTotal(0);
+                orderVo.setRecords(new ArrayList<>());
+                return orderVo;
+            }else {
+                EntityWrapper<MoocOrderT> entityWrapper = new EntityWrapper<>();
+                entityWrapper.eq("order_user",userId);
+                Integer all = orderMapper.selectCount(entityWrapper);
+
+                orderVo.setTotal(all);
+                orderVo.setRecords(orderVOList);
+
+                return orderVo;
+            }
+        }
+    }
+
+    @Override
+    public String getSoldSeatsByFieldId(Integer fieldId) {
+        if(fieldId == null){
+            log.error("查询已售座位错误，没有传入场次编号");
+            return "";
+        }else{
+            String soldSeatsByFieldId = orderMapper.getSoldSeatsByFieldId(fieldId);
+            return soldSeatsByFieldId;
+        }
+    }
+
+    /*@Override
+    public Page<OrderVO> getOrderByUserId(Integer userId, Page<OrderVO> page) {
+        Page<OrderVO> page1 = new Page<>();
+        if (userId == null){
+            return null;
+        }else {
+            EntityWrapper wrapper = new EntityWrapper();
+            wrapper.eq("order_user",userId);
+            List<OrderVO> list = orderMapper.selectList(wrapper);
+            if (CollectionUtils.isEmpty(list)){
+                page1.setTotal(0);
+                page1.setRecords(new ArrayList<>());
+                return page1;
+            }else {
+                EntityWrapper wrapper1 = new EntityWrapper();
+                wrapper1.eq("order",userId);
+                Integer integer = orderMapper.selectCount(wrapper1);
+                page1.setTotal(integer);
+                page1.setRecords(list);
+                return page1;
+            }
+        }
+    }*/
 }

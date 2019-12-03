@@ -15,6 +15,8 @@ public class GetFieldInfoDataResVO implements Serializable {
 
     private HallInfoBean hallInfo;
 
+    private String soldSeats;
+
     @Data
     public static class CinemaInfoBean implements Serializable {
         private static final long serialVersionUID = -8344143994157981298L;

@@ -79,7 +79,7 @@ public class WafRequestWrapper extends HttpServletRequestWrapper {
 		return result;
 
 	}
-	
+
 	protected String[] filterEntryString(String[] rawValue) {
 		for ( int i = 0 ; i < rawValue.length ; i++ ) {
 			rawValue[i] = filterParamString(rawValue[i]);
@@ -100,7 +100,7 @@ public class WafRequestWrapper extends HttpServletRequestWrapper {
 
 
 	/**
-	 * @Description 请求头过滤 
+	 * @Description 请求头过滤
 	 * @param name
 	 * 				过滤内容
 	 * @return
