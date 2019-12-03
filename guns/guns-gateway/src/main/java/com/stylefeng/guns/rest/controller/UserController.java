@@ -79,7 +79,9 @@ public class UserController {
         String requestHeader= request.getHeader(jwtProperties.getHeader());
         if (requestHeader != null && requestHeader.startsWith("Bearer ")){
             String token = requestHeader.substring(7);
-            redisTemplate.delete(token);
+            if (redisTemplate.hasKey(token)) {
+                redisTemplate.delete(token);
+            }
             return ResponseVO.success("用户退出成功");
         }
         //表示没登陆
@@ -101,7 +103,7 @@ public class UserController {
             }
             return ResponseVO.success(user);
         }
-        return ResponseVO.serviceFail("退出失败，用户尚未登陆");
+        return ResponseVO.serviceFail("查询失败，用户尚未登陆");
     }
 
 
