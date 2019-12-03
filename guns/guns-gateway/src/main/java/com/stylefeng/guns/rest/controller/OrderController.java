@@ -42,7 +42,6 @@ public class OrderController {
             //表示这个请求就没带上token，也就是没有登陆的状态
             ResponseVO.serviceFail("登陆信息异常，请重新登陆");
         }
-
         String token = requestHeader.substring(7);
         Integer userId = (Integer) redisTemplate.opsForValue().get(token);
         UserInfo user = userService.getUserById(userId);
