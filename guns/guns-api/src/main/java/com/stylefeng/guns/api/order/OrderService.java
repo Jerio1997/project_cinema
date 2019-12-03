@@ -8,5 +8,5 @@ public interface OrderService {
 
     Boolean isSoldSeats(String filedId,String seatId);
 
-    OrderVO saveOrderInfo(String fieldId, String soldSeats, String seatsName, String userId);
+    OrderVO saveOrderInfo(String fieldId, String soldSeats, String seatsName, Integer userId);
 }
