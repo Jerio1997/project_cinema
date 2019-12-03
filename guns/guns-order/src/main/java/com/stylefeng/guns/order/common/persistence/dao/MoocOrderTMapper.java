@@ -18,12 +18,9 @@ import java.util.List;
  */
 public interface MoocOrderTMapper extends BaseMapper<MoocOrderT> {
 
-<<<<<<< HEAD
     int getLastId();
 
-=======
     List<OrderVO> getOrdersByUserId(@Param("userId") Integer userId, Page<OrderVO> page);
 
     String getSoldSeatsByFieldId(@Param("fieldId") Integer fieldId);
->>>>>>> e04884673511772ca50074ed25778f4fb1cca611
 }

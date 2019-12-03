@@ -49,7 +49,6 @@ public class CinemaController {
 
             GetFieldInfoDataResVO abc = new GetFieldInfoDataResVO();
             abc.setSoldSeats(orderService.getSoldSeatsByFieldId(fieldId));
-
             return fieldInfo;
         }catch (Exception e){
             log.error("获取选座信息失败",e);

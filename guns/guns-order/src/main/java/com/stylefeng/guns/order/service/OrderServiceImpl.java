@@ -203,13 +203,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public String getSoldSeatsByFieldId(Integer fieldId) {
-        if(fieldId == null){
+       /* if(fieldId == null){
             log.error("查询已售座位错误，没有传入场次编号");
             return "";
-        }else{
+        }else{*/
             String soldSeatsByFieldId = orderMapper.getSoldSeatsByFieldId(fieldId);
             return soldSeatsByFieldId;
-        }
+//        }
     }
 
     /*@Override
