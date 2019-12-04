@@ -13,6 +13,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("order")
@@ -47,7 +48,7 @@ public class OrderController {
 
         // 判断座位的真实性
         Boolean isTrueSeats = orderService.isTrueSeats(fieldId, soldSeats);
-        if (isTrueSeats) {
+        if (!isTrueSeats) {
             return ResponseVO.serviceFail("该座位不存在");
         }
 
@@ -83,20 +84,43 @@ public class OrderController {
     @RequestMapping(value = "getOrderInfo",method = RequestMethod.POST)
     public ResponseVO getOrderInfo(
             @RequestParam(name = "nowPage",required = false,defaultValue = "1")Integer nowPage ,
-            @RequestParam(name = "pageSize",required = false,defaultValue = "5")Integer pageSize) {
+            @RequestParam(name = "pageSize",required = false,defaultValue = "5")Integer pageSize
+    ) {
 
         //获取用户Id
         String token = request.getHeader(jwtProperties.getHeader());
         Integer userId = (Integer) redisTemplate.opsForValue().get(token);
 
-        Page<OrderVO> page = new Page<>(nowPage,pageSize);
+        List<OrderVO> orderList = orderService.getOrderByUserId(userId);
 
-        if (userId != null){
+
+        if(orderList.size() == 0){
+            return ResponseVO.serviceFail("订单列表为空哦！~");
+        } else {
+            //计算totalpage
+            int totalpage = getTotalpage(pageSize,orderList.size());
+            return ResponseVO.success(nowPage,totalpage,orderList);
+        }
+
+//        Page<OrderVO> page = new Page<>(nowPage,pageSize);
+
+        /*if (userId != null){
             Page<OrderVO> total = orderService.getOrderByUserId(userId, page);
 
             return ResponseVO.success(nowPage, (int) total.getPages(),"",total.getRecords());
         }else {
             return ResponseVO.serviceFail("订单列表为空哦！~");
+        }*/
+    }
+
+    private int getTotalpage(Integer pageSize, int size) {
+        int a = size/pageSize;
+        int b = size%pageSize;
+        if(b == 0){
+            //余数是0
+            return a;
+        } else {
+            return ++a;
         }
     }
 }

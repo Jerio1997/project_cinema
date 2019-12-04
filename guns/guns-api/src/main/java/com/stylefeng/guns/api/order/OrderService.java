@@ -5,6 +5,8 @@ package com.stylefeng.guns.api.order;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.api.order.vo.OrderVO;
 
+import java.util.List;
+
 public interface OrderService {
 
     Boolean isTrueSeats(String filedId, String seatId);
@@ -15,7 +17,7 @@ public interface OrderService {
 
     String getSoldSeatsByFieldId(Integer fieldId);
 
-    Page<OrderVO> getOrderByUserId(Integer userId, Page<OrderVO> page);
+    List<OrderVO> getOrderByUserId(Integer userId);
 
     //List<OrderVO> getOrderByUserId(Integer userId, Integer nowPage, Integer pageSize);
 }

@@ -10,6 +10,8 @@ import com.stylefeng.guns.order.common.persistence.model.*;
 import com.stylefeng.guns.order.util.ConnectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
 import java.util.Date;
 //=======
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
@@ -52,7 +54,7 @@ public class OrderServiceImpl implements OrderService {
      * Jerio:判断座位状态
      * @param filedId 场次编号
      * @param seatId 座位编号 若是多个用','隔开
-     * @return
+     * @return false是该座位不可用 true是该座位可用
      */
     @Override
     public Boolean isTrueSeats(String filedId, String seatId) {
@@ -105,8 +107,8 @@ public class OrderServiceImpl implements OrderService {
         map.put("field_id",filedId);
         List<MoocOrderT> orders = orderMapper.selectByMap(map);
         if(orders.size() == 0){
-            //表示还没有该场次的订单，所以可以直接买
-            return true;
+            //表示还没有该场次的订单，所以该座位没被卖掉
+            return false;
         }
         String[] inSeatsId = splitSeatIds(seatId);
         for (MoocOrderT order : orders) {
@@ -116,12 +118,12 @@ public class OrderServiceImpl implements OrderService {
                 for (String s : inSeatsId) {
                     if(seat.equals(s)) {
                         //表示有相同的座位已经卖掉了
-                        return false;
+                        return true;
                     }
                 }
             }
         }
-        return true;
+        return false;
     }
 
     /**
@@ -146,7 +148,7 @@ public class OrderServiceImpl implements OrderService {
         String[] seats = splitSeatIds(soldSeats);
         int number = seats.length;
         int totalPrice = number*field.getPrice();
-        orderVO.setOrderPrice(totalPrice);
+        orderVO.setOrderPrice(new BigDecimal(totalPrice));
         orderVO.setOrderTimestamp((new Date()).getTime());
         //还差个获得座位名称------后记:发现想太多了，seatName已经给了
         /*MtimeHallDictT hall = hallDictTMapper.selectById(field.getHallId());
@@ -162,26 +164,31 @@ public class OrderServiceImpl implements OrderService {
         order.setCinemaId(cinema.getUuid());
         order.setFieldId(field.getUuid());
         order.setFilmId(film.getUuid());
-        //----这个已售座位编号与名称怎么整？---------
+        //----这个已售座位编号与名称怎么整？---它直接给了------
         order.setSeatsIds(soldSeats);
         order.setSeatsName(seatsName);
         //------已售座位编号与名称---------------
+
         order.setFilmPrice((double)(field.getPrice()));
+        order.setOrderPrice(new BigDecimal(totalPrice));
         order.setOrderTime(new Date());
         order.setOrderUser(userId);
         order.setOrderStatus(0);
         orderMapper.insert(order);
-        int lastId = orderMapper.getLastId();
-        orderVO.setOrderId(lastId);
+//        int lastId = orderMapper.getLastId();
+        orderVO.setOrderId(order.getUuid());
         return orderVO;
     }
 
-    @Override
+   /* @Override
     public Page<OrderVO> getOrderByUserId(Integer userId, Page<OrderVO> page) {
         Page<OrderVO> orderVo = new Page<>();
         if (userId == null){
             return null;
         }else {
+
+            Map<String,Object> map = new HashMap<>();
+//            map.put("")
             List<OrderVO> orderVOList = orderMapper.getOrdersByUserId(userId,page);
 
             if (orderVOList == null && orderVOList.size() == 0){
@@ -198,7 +205,7 @@ public class OrderServiceImpl implements OrderService {
                 return orderVo;
             }
         }
-    }
+    }*/
 
     @Override
     public String getSoldSeatsByFieldId(Integer fieldId) {
@@ -222,6 +229,30 @@ public class OrderServiceImpl implements OrderService {
             }
 
         }
+    }
+
+    @Override
+    public List<OrderVO> getOrderByUserId(Integer userId) {
+        List<OrderVO> orderList = new ArrayList<>();
+        Map<String,Object> map = new HashMap<>();
+        map.put("order_user",userId);
+        List<MoocOrderT> orderTs= orderMapper.selectByMap(map);
+        for (MoocOrderT orderT : orderTs) {
+            OrderVO order = new OrderVO();
+            MtimeCinemaT cinema = cinemaTMapper.selectById(orderT.getCinemaId());
+            order.setCinemaName(cinema.getCinemaName());
+            MtimeFieldT field = fieldTMapper.selectById(orderT.getFieldId());
+            order.setFieldTime(field.getBeginTime());
+            MtimeFilmT film = filmTMapper.selectById(orderT.getFilmId());
+            order.setFilmName(film.getFilmName());
+            order.setOrderId(orderT.getUuid());
+            order.setOrderPrice(orderT.getOrderPrice());
+            order.setOrderStatus(orderT.getOrderStatus());
+            order.setOrderTimestamp(orderT.getOrderTime().getTime());
+            order.setSeatsName(orderT.getSeatsIds());
+            orderList.add(order);
+        }
+        return orderList;
     }
 
     /*@Override

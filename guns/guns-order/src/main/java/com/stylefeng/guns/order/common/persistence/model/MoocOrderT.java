@@ -1,21 +1,21 @@
 package com.stylefeng.guns.order.common.persistence.model;
 
-import com.baomidou.mybatisplus.activerecord.Model;
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
-
-import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableName;
+import java.io.Serializable;
 
 /**
  * <p>
  * 订单信息表
  * </p>
  *
- * @author xxxing
- * @since 2019-12-02
+ * @author Jerio
+ * @since 2019-12-04
  */
 @TableName("mooc_order_t")
 public class MoocOrderT extends Model<MoocOrderT> {
@@ -25,7 +25,7 @@ public class MoocOrderT extends Model<MoocOrderT> {
     /**
      * 主键编号
      */
-    @TableId(value = "UUID", type = IdType.INPUT)
+    @TableId(value = "UUID", type = IdType.AUTO)
     private Integer uuid;
     /**
      * 影院编号
@@ -61,7 +61,7 @@ public class MoocOrderT extends Model<MoocOrderT> {
      * 订单总金额
      */
     @TableField("order_price")
-    private Double orderPrice;
+    private BigDecimal orderPrice;
     /**
      * 下单时间
      */
@@ -135,11 +135,11 @@ public class MoocOrderT extends Model<MoocOrderT> {
         this.filmPrice = filmPrice;
     }
 
-    public Double getOrderPrice() {
+    public BigDecimal getOrderPrice() {
         return orderPrice;
     }
 
-    public void setOrderPrice(Double orderPrice) {
+    public void setOrderPrice(BigDecimal orderPrice) {
         this.orderPrice = orderPrice;
     }
 

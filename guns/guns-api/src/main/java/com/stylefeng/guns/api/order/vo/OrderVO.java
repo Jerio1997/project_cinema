@@ -3,6 +3,7 @@ package com.stylefeng.guns.api.order.vo;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Data
 public class OrderVO implements Serializable {
@@ -11,7 +12,7 @@ public class OrderVO implements Serializable {
     private String fieldTime;
     private String cinemaName;
     private String seatsName;
-    private Integer orderPrice;
+    private BigDecimal orderPrice;
     private Long orderTimestamp;
-    private String orderStatus;
+    private Integer orderStatus;
 }
