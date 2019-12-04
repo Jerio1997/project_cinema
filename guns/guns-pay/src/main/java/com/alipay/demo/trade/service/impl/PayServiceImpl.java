@@ -46,7 +46,7 @@ public class PayServiceImpl implements PayService {
 
                 // 需要修改为运行机器上的路径
                 //用http协议访问
-                String filePath = String.format("C:\\nginx-1.15.12\\html/qr-%s.png",
+                String filePath = String.format("D:\\CommenTools\\FrameworkTools\\nginx-1.15.12\\html/qr-%s.png",
                         response.getOutTradeNo());
                 System.out.println("filePath:" + filePath);
                 ZxingUtils.getQRCodeImge(response.getQrCode(), 256, filePath);
