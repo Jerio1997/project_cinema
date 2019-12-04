@@ -2,12 +2,15 @@ package com.stylefeng.guns.order.service;
 
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.stylefeng.guns.api.order.OrderService;
+import com.stylefeng.guns.api.order.vo.MtimeOrder;
 import com.stylefeng.guns.api.order.vo.OrderVO;
 import com.stylefeng.guns.order.common.persistence.dao.*;
 import com.stylefeng.guns.order.common.persistence.model.*;
 import com.stylefeng.guns.order.util.ConnectionUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -208,10 +211,13 @@ public class OrderServiceImpl implements OrderService {
             log.error("查询已售座位错误，没有传入场次编号");
             return null;
         }else{
-            Map<String,Object> map = new HashMap<>();
-            map.put("field_id",fieldId);
-            map.put("order_status",1);
-            List<MoocOrderT> orderList = orderMapper.selectByMap(map);
+//            Map<String,Object> map = new HashMap<>();
+//            map.put("field_id",fieldId);
+//            map.put("order_status",1);
+//            List<MoocOrderT> orderList = orderMapper.selectByMap(map);
+            EntityWrapper<MoocOrderT> moocOrderTEntityWrapper = new EntityWrapper<>();
+            moocOrderTEntityWrapper.eq("field_id",fieldId).and().in("order_status","0,1");
+            List<MoocOrderT> orderList = orderMapper.selectList(moocOrderTEntityWrapper);
             StringBuffer result = new StringBuffer();
             if(orderList.size() != 0){
                 for (MoocOrderT order : orderList) {
@@ -272,4 +278,20 @@ public class OrderServiceImpl implements OrderService {
             }
         }
     }*/
+
+    @Override
+    public MtimeOrder queryOrderById(Integer orderId) {
+        MoocOrderT moocOrderT = orderMapper.selectById(orderId);
+        MtimeOrder mtimeOrder = new MtimeOrder();
+        BeanUtils.copyProperties(moocOrderT,mtimeOrder);
+        return mtimeOrder;
+    }
+
+    @Override
+    public int updateOrderStatus(Integer orderId,Integer status) {
+        MoocOrderT moocOrderT = orderMapper.selectById(orderId);
+        moocOrderT.setOrderStatus(status);
+        Integer integer = orderMapper.updateById(moocOrderT);
+        return integer;
+    }
 }
