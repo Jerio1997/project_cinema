@@ -1,10 +1,12 @@
 package com.stylefeng.guns.rest.service.impl;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.api.cinema.CinemaService;
 import com.stylefeng.guns.api.cinema.vo.*;
+import com.stylefeng.guns.api.order.OrderService;
 import com.stylefeng.guns.rest.common.persistence.dao.*;
 import com.stylefeng.guns.rest.common.persistence.model.*;
 import org.springframework.beans.BeanUtils;
@@ -21,6 +23,8 @@ import java.util.List;
 @Service(interfaceClass = CinemaService.class, loadbalance = "roundrobin")
 public class CinemaServiceImpl implements CinemaService {
 
+    @Reference(interfaceClass = OrderService.class,check = false)
+    OrderService orderService;
     @Autowired
     MtimeAreaDictTMapper mtimeAreaDictTMapper;
 
@@ -257,7 +261,8 @@ public class CinemaServiceImpl implements CinemaService {
         hallInfoBean.setHallFieldId(fieldId);
         hallInfoBean.setPrice(mtimeFieldT.getPrice());
         hallInfoBean.setSeatFile(mtimeHallDictT.getSeatAddress());
-        hallInfoBean.setSoldSeats("1,2,3,5,12");
+        String soldSeats = orderService.getSoldSeatsByFieldId(fieldId);
+        hallInfoBean.setSoldSeats(soldSeats);
         getFieldInfoDataResVO.setHallInfo(hallInfoBean);
 
         baseResVO.setData(getFieldInfoDataResVO);
@@ -265,4 +270,40 @@ public class CinemaServiceImpl implements CinemaService {
         baseResVO.setImgPre("http://img.meetingshop.cn/");
         return baseResVO;
     }
+
+    @Override
+    public MtimeCinema queryCinemaById(Integer cinemaId) {
+        MtimeCinemaT mtimeCinemaT = mtimeCinemaTMapper.selectById(cinemaId);
+        MtimeCinema mtimeCinema = new MtimeCinema();
+        BeanUtils.copyProperties(mtimeCinemaT,mtimeCinema);
+        return mtimeCinema;
+    }
+
+    @Override
+    public MtimeHallFilmInfo queryHallFilmInfoById(Integer filmId) {
+        EntityWrapper<MtimeHallFilmInfoT> mtimeHallFilmInfoTEntityWrapper = new EntityWrapper<>();
+        mtimeHallFilmInfoTEntityWrapper.eq("film_id",filmId);
+        List<MtimeHallFilmInfoT> mtimeHallFilmInfoTS = mtimeHallFilmInfoTMapper.selectList(mtimeHallFilmInfoTEntityWrapper);
+        MtimeHallFilmInfoT mtimeHallFilmInfoT = mtimeHallFilmInfoTS.get(0);
+        MtimeHallFilmInfo mtimeHallFilmInfo = new MtimeHallFilmInfo();
+        BeanUtils.copyProperties(mtimeHallFilmInfoT,mtimeHallFilmInfo);
+        return mtimeHallFilmInfo;
+    }
+
+    @Override
+    public MtimeField queryFieldById(Integer fieldId) {
+        MtimeFieldT mtimeFieldT = mtimeFieldTMapper.selectById(fieldId);
+        MtimeField mtimeField = new MtimeField();
+        BeanUtils.copyProperties(mtimeFieldT,mtimeField);
+        return mtimeField;
+    }
+
+    @Override
+    public MtimeHallDict queryHallById(Integer hallId) {
+        MtimeHallDictT mtimeHallDictT = mtimeHallDictTMapper.selectById(hallId);
+        MtimeHallDict mtimeHallDict = new MtimeHallDict();
+        BeanUtils.copyProperties(mtimeHallDictT,mtimeHallDict);
+        return mtimeHallDict;
+    }
+
 }
