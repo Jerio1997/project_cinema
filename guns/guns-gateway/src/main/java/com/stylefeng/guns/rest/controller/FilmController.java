@@ -149,8 +149,14 @@ public class FilmController {
             return ResponseVo.serviceException("查询失败，无影片可加载");
         }
        String filmId = filmDetailVo.getFilmId();
-
+      //查询影片的详细信息,使用了dubb0的异步调用
+      //获取影片描述信息
+      //FilmDescVO filmDescVO = filmService.getFilmDesc(filmId);  //不使用异步调用
         asyncFilmsService.getFilmDesc(filmId);
+        //Future设计模式是Java多线程开发常用设计模式。一句话，将客户端请求的处理过程从同步改为异步，
+        // 以便将客户端解放出来，在服务端程序处理期间可以去干点其他事情，最后再来取请求的结果。
+        // 好处在于整个调用过程中不需要等待，可以充分利用所有的时间片段，提高系统的响应速度。
+
         Future<FilmDescVO> filmDescVOFuture = RpcContext.getContext().getFuture();
         //图片信息
         asyncFilmsService.getImgs(filmId);
@@ -163,11 +169,11 @@ public class FilmController {
         Future<List<ActorVO>> actors = RpcContext.getContext().getFuture();
 
         InfoRequstVO infoRequstVO = new InfoRequstVO();
-
+       //组织actor属性
         ActorRequestVO actorRequestVO = new ActorRequestVO();
         actorRequestVO.setActors(actors.get());
         actorRequestVO.setDirector(actorVOFuture.get());
-
+       //组织info对象
         infoRequstVO.setActors(actorRequestVO);
         infoRequstVO.setBiography(filmDescVOFuture.get().getBiography());
         infoRequstVO.setFilmId(filmId);

@@ -1,32 +1,26 @@
 package com.stylefeng.guns.order.service;
 
 import com.alibaba.dubbo.config.annotation.Service;
-//<<<<<<< HEAD
 import com.alibaba.fastjson.JSONObject;
 import com.stylefeng.guns.api.order.OrderService;
 import com.stylefeng.guns.api.order.vo.OrderVO;
 import com.stylefeng.guns.order.common.persistence.dao.*;
 import com.stylefeng.guns.order.common.persistence.model.*;
 import com.stylefeng.guns.order.util.ConnectionUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.Date;
-//=======
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.plugins.Page;
 import com.stylefeng.guns.order.common.persistence.dao.MoocOrderTMapper;
 import com.stylefeng.guns.order.common.persistence.model.MoocOrderT;
-import lombok.extern.slf4j.Slf4j;
 import com.stylefeng.guns.order.common.persistence.dao.MtimeFieldTMapper;
 import com.stylefeng.guns.order.common.persistence.dao.MtimeHallDictTMapper;
 import com.stylefeng.guns.order.common.persistence.model.MtimeFieldT;
 import com.stylefeng.guns.order.common.persistence.model.MtimeHallDictT;
-
 import java.util.ArrayList;
 import java.util.List;
-//>>>>>>> e04884673511772ca50074ed25778f4fb1cca611
 import java.util.HashMap;
 import java.util.Map;
 @Slf4j
@@ -199,6 +193,7 @@ public class OrderServiceImpl implements OrderService {
                 EntityWrapper<MoocOrderT> entityWrapper = new EntityWrapper<>();
                 entityWrapper.eq("order_user",userId);
                 Integer all = orderMapper.selectCount(entityWrapper);
+
                 orderVo.setTotal(all);
                 orderVo.setRecords(orderVOList);
 

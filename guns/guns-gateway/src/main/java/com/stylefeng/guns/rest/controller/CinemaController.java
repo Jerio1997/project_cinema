@@ -6,9 +6,7 @@ import com.stylefeng.guns.api.cinema.vo.BaseResVO;
 import com.stylefeng.guns.api.cinema.vo.ConditionResVO;
 import com.stylefeng.guns.api.cinema.vo.GetFieldInfoDataResVO;
 import com.stylefeng.guns.api.cinema.vo.GetFieldsDataResVO;
-
 import com.stylefeng.guns.api.order.OrderService;
-import com.stylefeng.guns.rest.modular.vo.ResponseVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
