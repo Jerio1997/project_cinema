@@ -1,5 +1,6 @@
 package com.stylefeng.guns.rest.modular.auth.filter;
 
+import com.alibaba.fastjson.JSON;
 import com.stylefeng.guns.core.base.tips.ErrorTip;
 import com.stylefeng.guns.core.util.RenderUtil;
 import com.stylefeng.guns.rest.common.exception.BizExceptionEnum;
@@ -17,6 +18,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -71,6 +74,9 @@ public class AuthFilter extends OncePerRequestFilter {
                 //表示Redis中相应的uuid不存在或者已经过期
                 //重定向到登陆界面
 //                response.sendRedirect("localhost:1818/auth");
+                Map<String,Object> map = new HashMap<>();
+                map.put("status", 700);
+                response.getWriter().println(JSON.toJSONString(map));
                 return;
             } else {
                 //表示找到了Redis中相应的uuid
